@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="layout" name="activity_search">@layout/activity_search_wide</item>
+    <item type="layout" name="activity_myseries">@layout/activity_myseries_wide</item>
+</resources>
