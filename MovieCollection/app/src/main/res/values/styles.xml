@@ -1,8 +1,26 @@
-<resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
 
-</resources>
+    <resources>
+
+        <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+            <item name="colorPrimary">@color/primary</item>
+            <item name="colorPrimaryDark">@color/primary_dark</item>
+            <item name="colorAccent">@color/accent</item>
+            <item name="toolbarStyle">@style/Toolbar</item>
+
+        </style>
+        <!-- main activity toolbar style -->
+       <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+            <item name="android:background">?attr/colorPrimary</item>
+            <item name="popupTheme">@style/Theme.AppCompat.Light</item>
+        </style>
+
+        <style name="AppTheme.Detail">
+            <item name="android:statusBarColor">@android:color/transparent</item>
+        </style>
+        <style name="ToolBarWithNavigationBack">
+            <item name="navigationIcon">@drawable/abc_ic_ab_back_mtrl_am_alpha</item>
+        </style>
+    </resources>
+
+
