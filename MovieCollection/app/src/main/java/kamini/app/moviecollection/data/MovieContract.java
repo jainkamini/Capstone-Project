@@ -70,6 +70,10 @@ public class MovieContract {
         public static String getMovieIdFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+        // content://..../MovieId
+       /* public static Uri buildFavouriteMoviesUriWithMovieId(int MovieId) {
+            return CONTENT_URI.buildUpon().appendPath(Integer.toString(MovieId)).build();
+        }*/
 
        /* public static Uri buildMovieFavoriteSatus(String favoriteStatus) {
             return CONTENT_URI.buildUpon().appendPath(favoriteStatus).build();

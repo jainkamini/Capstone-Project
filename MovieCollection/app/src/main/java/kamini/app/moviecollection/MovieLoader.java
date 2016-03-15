@@ -18,9 +18,9 @@ public class MovieLoader extends CursorLoader {
        // CONTENT_URI
     }
 
-    public static MovieLoader newInstanceForItemId(Context context, long itemId) {
+   /* public static MovieLoader newInstanceForItemId(Context context, long itemId) {
         return new MovieLoader(context, MovieContract.MovieEntry.buildMovieUri(itemId));
-    }
+    }*/
 
     private MovieLoader(Context context, Uri uri) {
         super(context, uri, Query.PROJECTION, null, null, null);
