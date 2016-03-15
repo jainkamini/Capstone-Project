@@ -2,4 +2,6 @@
     <string name="app_name">MovieCollection</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="no_information_available">No information available.</string>
+    <string name="empty_recycler_view_no_network">The network is not available. Please check the internet connectivity.</string>
 </resources>

@@ -27,8 +27,12 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                MovieEntry.COLUMN_MOVIE_DATE +" TEXT   , " +
                 MovieEntry.COLUMN_MOVIE_POSTER +" TEXT NOT NULL , " +
                MovieEntry.COLUMN_MOVIE_OVERVIEW +" TEXT NOT NULL , " +
-               MovieEntry.COLUMN_MOVIE_RATING +" TEXT NOT NULL , " +
-                MovieEntry.COLUMN_MOVIE_TITLE +" TEXT NOT NULL  " +
+               MovieEntry.COLUMN_MOVIE_RATING +" REAL NOT NULL , " +
+                MovieEntry.COLUMN_MOVIE_TITLE +" TEXT NOT NULL ,  " +
+                MovieEntry.COLUMN_MOVIE_NAME +" TEXT NOT NULL  , " +
+                MovieEntry.COLUMN_MOVIE_GENREIDS +" TEXT NOT NULL , " +
+                MovieEntry.COLUMN_MOVIE_VOTECOUNT +" INTEGER NOT NULL ,  " +
+                MovieEntry.COLUMN_MOVIE_FAVORITESTATUS +" TEXT NOT NULL  " +
 
 
         " );";
@@ -48,8 +52,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
 
 
-
-                // Set up the location column as a foreign key to location table.
                 " FOREIGN KEY (" + TrailerEntry.COLUMN_MOVIEID_KEY+ ") REFERENCES " +
                 MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
 

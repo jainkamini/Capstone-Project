@@ -1,14 +1,49 @@
 package kamini.app.moviecollection.data;
 
-/**
+import android.app.IntentService;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.List;
+import java.util.Vector;
+
+import kamini.app.moviecollection.MovieAdapter;
+import kamini.app.moviecollection.api.TheMovieDBService;
+import kamini.app.moviecollection.models.MovieItem;
+import kamini.app.moviecollection.models.TheMovieDBResult;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+/*
  * Created by Kamini on 3/13/2016.
  */
-public class FetchService{ /*extends IntentService  {
+public class FetchService extends IntentService
+
+    {
+        private static final String TAG = "FetchService";
     public static final String LOG_TAG = FetchService.class.getSimpleName();
+
+        public static final String BROADCAST_ACTION_STATE_CHANGE
+                = "kamini.app.moviecollection.data.intent.action.STATE_CHANGE";
+        public static final String EXTRA_REFRESHING
+                = "kamini.app.moviecollection.data.intent.extra.REFRESHING";
+        public static final String BROADCAST_ACTION_NO_CONNECTIVITY
+                = "kamini.app.moviecollection.data.intent.action.NO_CONNECTIVITY";
+
+        Call<TheMovieDBResult> call;
     public FetchService() {
-        super(LOG_TAG);
+        super(TAG);
     }
     protected void onHandleIntent(Intent intent) {
+      //  new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
+        getData();
 
     }
 
@@ -16,7 +51,7 @@ public class FetchService{ /*extends IntentService  {
     {
 
           final String API_BASE_URL = "http://api.themoviedb.org/3/discover/";
-         Call<TheMovieDBResult> call;
+
              TheMovieDBResult movieresult;
          List<MovieItem> items;
          MovieAdapter movieAdapter;
@@ -36,9 +71,12 @@ public class FetchService{ /*extends IntentService  {
                     movieresult = response.body();
                     List<MovieItem> items;
                     items = movieresult.getresults();
-                    movieAdapter.swapList(items);
+                    // movieAdapter.swapList(items);
+                    InsertData(items);
+
                     Log.e(LOG_TAG, "url:" + movieresult);
                     Log.e(LOG_TAG, "response = " + new Gson().toJson(movieresult));
+
                 } catch (NullPointerException e) {
                     Toast toast = null;
                     if (response.code() == 401) {
@@ -57,5 +95,43 @@ public class FetchService{ /*extends IntentService  {
             }
         });
 
-    }*/
+
+    }
+
+
+        public void InsertData(List<MovieItem> items)
+        {
+            int i;
+           // Context mContext;
+            Vector<ContentValues> values = new Vector <ContentValues> (items.size());
+            ContentValues movie_value = new ContentValues();
+            for (i=0 ;i<items.size();i++)
+            {
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, items.get(i).getId());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, items.get(i).getOriginal_title());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());
+
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME,items.get(i).getTitle());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,items.get(i).getOverview());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER,items.get(i).getPoster_path());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_RATING,items.get(i).getVote_average());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,items.get(i).getVote_count());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS,items.get(i).getGenreIds().toString());
+                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS,"P");
+                values.add(movie_value);
+
+                Log.d(LOG_TAG, "Movie Name. " +items.get(i).getTitle());
+            }
+
+            if (values.size()>0)
+            {
+
+                ContentValues[] cvValue = new ContentValues[values.size()];
+                values.toArray(cvValue);
+                 getApplicationContext().getContentResolver().bulkInsert(
+                        MovieContract.MovieEntry.CONTENT_URI,cvValue);
+                Log.d(LOG_TAG, "Sync Complete. " + values.size() + " Inserted");
+            }
+        }
 }

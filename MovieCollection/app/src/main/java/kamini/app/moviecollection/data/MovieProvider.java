@@ -23,32 +23,33 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_ID = 101;
     static final int TRAILAR = 102;
     static final int REVIEW = 103;
+    static final int MOVIE_WITH_FAVORITE_STATUS = 104;
+
+    private static final SQLiteQueryBuilder ScoreQuery =
+            new SQLiteQueryBuilder();
+    private static final String MOVIE_BY_FAVOURITESTATUS = MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = ?";
 
 
-    /*
-       Students: Here is where you need to create the UriMatcher. This UriMatcher will
-       match each URI to the WEATHER, WEATHER_WITH_LOCATION, WEATHER_WITH_LOCATION_AND_DATE,
-       and LOCATION integer constants defined above.  You can test this by uncommenting the
-       testUriMatcher testgg within TestUriMatcher.
-    */
+
     static UriMatcher buildUriMatcher() {
-        // I know what you're thinking.  Why create a UriMatcher when you can use regular
-        // expressions instead?  Because you're not crazy, that's why.
 
-        // All paths added to the UriMatcher have a corresponding code to return when a match is
-        // found.  The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case.
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE);
-      //  matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/*", WEATHER_WITH_LOCATION);
-        matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/*/#", MOVIE_ID );
+
+       // matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/*/#", MOVIE_ID );
+        matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/#", MOVIE_ID );
 
         matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE);
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
+        matcher.addURI(authority,"favoriteStatus" , MOVIE_WITH_FAVORITE_STATUS);
+
+
+
+
         return matcher;
     }
 
@@ -68,13 +69,16 @@ public class MovieProvider extends ContentProvider {
         switch (match) {
             // Student: Uncomment and fill out these two cases
             case MOVIE:
-                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
+                return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_ID :
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             case TRAILAR :
                 return MovieContract.TrailerEntry.CONTENT_ITEM_TYPE;
             case REVIEW :
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
+            case MOVIE_WITH_FAVORITE_STATUS:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
+
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -208,12 +212,32 @@ public class MovieProvider extends ContentProvider {
                 break;
 
             }
+
+
             case MOVIE_ID: {
-                  // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+
+               // final String _id = uri.getPathSegments().get(1);
+                   moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
                         selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+
+                break;
+
+
+            }
+
+            case MOVIE_WITH_FAVORITE_STATUS: {
+                // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        MOVIE_BY_FAVOURITESTATUS,
                         selectionArgs,
                         null,
                         null,
@@ -259,4 +283,40 @@ public class MovieProvider extends ContentProvider {
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
+
+
+
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values)
+    {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        switch (match)
+        {
+            case MOVIE:
+                db.beginTransaction();
+                int returncount = 0;
+                try
+                {
+                    for(ContentValues value : values)
+                    {
+                        long _id = db.insertWithOnConflict(MovieContract.MovieEntry.TABLE_NAME, null, value,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        if (_id != -1)
+                        {
+                            returncount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri,null);
+                return returncount;
+            default:
+                return super.bulkInsert(uri,values);
+        }
+    }
+
 }

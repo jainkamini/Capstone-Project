@@ -30,7 +30,8 @@ public class MovieContract {
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieEntry implements BaseColumns {
 
-
+       /* public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.com.example.xyzreader.items";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.com.example.xyzreader.items";*/
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
 
@@ -50,11 +51,33 @@ public class MovieContract {
         public static final String COLUMN_MOVIE_DATE = "movie_date";
         public static final String COLUMN_MOVIE_RATING = "movie_rating";
         public static final String COLUMN_MOVIE_OVERVIEW = "movie_overview";
+        public static final String COLUMN_MOVIE_NAME = "movie_name";
+        public static final String COLUMN_MOVIE_VOTECOUNT = "movie_votecount";
+        public static final String COLUMN_MOVIE_GENREIDS = "movie_genreids";
+        public static final String COLUMN_MOVIE_FAVORITESTATUS = "movie_favoritestatus";
+
+
 
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static Uri buildDirUri() {
+            return CONTENT_URI.buildUpon().build();
+        }
+
+        public static String getMovieIdFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+       /* public static Uri buildMovieFavoriteSatus(String favoriteStatus) {
+            return CONTENT_URI.buildUpon().appendPath(favoriteStatus).build();
+        }*/
+        public static Uri buildMovieFavoriteSatus() {
+            return CONTENT_URI.buildUpon().appendPath("favoriteStatus").build();
+        }
+
 
 
 

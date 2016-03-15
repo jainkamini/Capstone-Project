@@ -1,3 +1,4 @@
+<!--
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,8 +15,9 @@
         android:id="@+id/list_movie_recyclerview"/>
 
 </FrameLayout>
+-->
 
-    <!--
+
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -55,7 +57,15 @@
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/abc_dialog_padding_material">
 
-
+                <TextView
+                    android:id="@+id/recycler_view_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_text"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:visibility="gone"
+                    android:text="@string/no_information_available" />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_movie_recyclerview"
                     android:layout_width="match_parent"
@@ -70,4 +80,4 @@
             </LinearLayout>
 
 
-    </android.support.design.widget.CoordinatorLayout>-->
+    </android.support.design.widget.CoordinatorLayout>
