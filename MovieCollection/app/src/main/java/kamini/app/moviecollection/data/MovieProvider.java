@@ -217,7 +217,7 @@ public class MovieProvider extends ContentProvider {
             case MOVIE_ID: {
 
                // final String _id = uri.getPathSegments().get(1);
-                   moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+                 //  moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,

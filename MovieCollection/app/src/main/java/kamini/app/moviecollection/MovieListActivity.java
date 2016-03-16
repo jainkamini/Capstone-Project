@@ -20,6 +20,7 @@ public class MovieListActivity extends AppCompatActivity {
     private TheMovieDBResult movieresult;
     private List<MovieItem> items;
     private MovieAdapter movieAdapter;
+    private NevigationDrawerActivity navigationDrawerActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

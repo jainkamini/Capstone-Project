@@ -58,9 +58,9 @@ Context context;
         return mCursor.getLong(MovieLoader.Query._id);
     }
     @Override public int getItemCount() {
-        if (mCursor == null){
+       /* if (mCursor == null){
             return -1;
-        }
+        }*/
         return mCursor.getCount();
     }
 

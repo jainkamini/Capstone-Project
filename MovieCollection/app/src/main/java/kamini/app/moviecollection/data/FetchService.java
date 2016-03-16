@@ -43,6 +43,7 @@ public class FetchService extends IntentService
     }
     protected void onHandleIntent(Intent intent) {
       //  new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
+      //  new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true);
         getData();
 
     }
@@ -62,6 +63,8 @@ public class FetchService extends IntentService
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
+
+         //       call =  theMovieDBAPI.getMovieResponse( "vote_average.desc", "b85cf4603ce5916a993dd400866808bc");
         call =  theMovieDBAPI.getMovieResponse("popularity.desc", "b85cf4603ce5916a993dd400866808bc");
         call.enqueue(new Callback<TheMovieDBResult>() {
             @Override
@@ -91,7 +94,7 @@ public class FetchService extends IntentService
 
             @Override
             public void onFailure(Throwable t) {
-                Log.e("getQuestions threw: ", t.getMessage());
+                Log.e("getMovie threw: ", t.getMessage());
             }
         });
 
@@ -104,9 +107,10 @@ public class FetchService extends IntentService
             int i;
            // Context mContext;
             Vector<ContentValues> values = new Vector <ContentValues> (items.size());
-            ContentValues movie_value = new ContentValues();
+
             for (i=0 ;i<items.size();i++)
             {
+                ContentValues movie_value = new ContentValues();
                 movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, items.get(i).getId());
                 movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, items.get(i).getOriginal_title());
                 movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());

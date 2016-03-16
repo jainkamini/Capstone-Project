@@ -4,4 +4,24 @@
     <string name="action_settings">Settings</string>
     <string name="no_information_available">No information available.</string>
     <string name="empty_recycler_view_no_network">The network is not available. Please check the internet connectivity.</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_nevigation_drawer">NevigationDrawerActivity</string>
+
+  <!--  <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>-->
+    <string name="nevi_title_popular">Popular</string>
+    <string name="nevi_title_toprated">Top Rated</string>
+    <string name="nevi_title_upcoming">Upcoming</string>
+    <string name="nevi_title_nowplaying">Now Playing</string>
+    <string name="nevi_title_favorite">Favorite</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+
 </resources>
