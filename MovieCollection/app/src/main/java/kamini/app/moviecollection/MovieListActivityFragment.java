@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,12 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 import kamini.app.moviecollection.data.FetchService;
-import kamini.app.moviecollection.models.MovieItem;
-import kamini.app.moviecollection.models.TheMovieDBResult;
-import retrofit2.Call;
 
 
 /**
@@ -34,11 +30,10 @@ public class MovieListActivityFragment extends Fragment implements
 
     public static final String LOG_TAG = MovieListActivityFragment.class.getSimpleName();
 
-    private static final String API_BASE_URL = "http://api.themoviedb.org/3/discover/";
-    private Call<TheMovieDBResult> call;
-    private TheMovieDBResult movieresult;
-    private List<MovieItem> items;
+
+
     private MovieAdapter movieAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
     private RecyclerView mRecyclerView;
     private boolean mIsRefreshing = false;
@@ -53,6 +48,20 @@ public class MovieListActivityFragment extends Fragment implements
 
 
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
+
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.primary,
+                R.color.primary_dark,
+                R.color.primary_light);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Set refresh to false so the refresh icon doesn't just spin indefinitely
+                // This is just a placeholder.
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
      //   movieAdapter = new MovieAdapter(items);
