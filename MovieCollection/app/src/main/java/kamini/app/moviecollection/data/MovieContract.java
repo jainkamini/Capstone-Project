@@ -54,7 +54,7 @@ public class MovieContract {
         public static final String COLUMN_MOVIE_NAME = "movie_name";
         public static final String COLUMN_MOVIE_VOTECOUNT = "movie_votecount";
         public static final String COLUMN_MOVIE_GENREIDS = "movie_genreids";
-        public static final String COLUMN_MOVIE_FAVORITESTATUS = "movie_favoritestatus";
+        public static final String COLUMN_MOVIE_STATUS = "movie_status";
 
 
 
@@ -63,9 +63,6 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildDirUri() {
-            return CONTENT_URI.buildUpon().build();
-        }
 
         public static String getMovieIdFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -78,13 +75,28 @@ public class MovieContract {
        /* public static Uri buildMovieFavoriteSatus(String favoriteStatus) {
             return CONTENT_URI.buildUpon().appendPath(favoriteStatus).build();
         }*/
+
+        public static Uri buildMovieStatus(String movieStatus)
+        {
+            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_STATUS,movieStatus).build();
+        }
         public static Uri buildMovieFavoriteSatus() {
             return CONTENT_URI.buildUpon().appendPath("favoriteStatus").build();
         }
 
+        public static Uri buildMovieFavoriteSatus(String movieStatus) {
+            return CONTENT_URI.buildUpon().appendPath((movieStatus)).build();
+        }
 
+        /** Read moviesStatus  item detail URI. */
+        public static String getMovieStatus(Uri movieUri) {
+            return movieUri.getPathSegments().get(1);
+        }
 
-
+        public static String getMovieStatusUri(Uri uri) {
+            String movieStatus = uri.getQueryParameter(COLUMN_MOVIE_STATUS);
+           return movieStatus;
+        }
     }
     public static final class TrailerEntry implements BaseColumns {
         public static final Uri CONTENT_URI =

@@ -12,23 +12,31 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import kamini.app.moviecollection.data.MovieContract;
+
 /**
  * Created by Kamini on 3/12/2016.
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
   //  private List<MovieItem> items;
-    private Cursor mCursor;
-Context context;
 
-    public MovieAdapter(Context mcontext , Cursor mCursor){
+    private Cursor mCursor;
+    final private Context context;
+    final private MovieAdapterOnClickHandler mClickHandler;
+    public MovieAdapter(Context mContext ,MovieAdapterOnClickHandler dh, Cursor mCursor){
         this.mCursor = mCursor;
-        this.context=mcontext;
+        this.context=mContext;
+        this.mClickHandler=dh;
 
     }
    /* public MovieAdapter(List<MovieItem> items){
         this.items = items;
     }*/
+
+    public static interface MovieAdapterOnClickHandler {
+        void onClick(int movieId, ViewHolder vh);
+    }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -64,22 +72,30 @@ Context context;
         return mCursor.getCount();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView txttitle;
         public TextView txtname;
         public TextView txtvotecount;
         public ImageView imgposter;
         public TextView  txtdate;
         public TextView txtvoteavg;
-        public ViewHolder(View v){
-            super(v);
-            txttitle = (TextView) v.findViewById(R.id.list_movie_title_textview);
-            txtname = (TextView) v.findViewById(R.id.list_movie_name_textview);
-            txtvotecount = (TextView) v.findViewById(R.id.list_movie_votecount_textview);
-            imgposter = (ImageView) v.findViewById(R.id.list_movie_imageview);
-            txtdate = (TextView) v.findViewById(R.id.list_movie_releasedate_textview);
-            txtvoteavg = (TextView) v.findViewById(R.id.list_movierating_textview);
-
+        public ViewHolder(View view){
+            super(view);
+            txttitle = (TextView) view.findViewById(R.id.list_movie_title_textview);
+            txtname = (TextView) view.findViewById(R.id.list_movie_name_textview);
+            txtvotecount = (TextView) view.findViewById(R.id.list_movie_votecount_textview);
+            imgposter = (ImageView) view.findViewById(R.id.list_movie_imageview);
+            txtdate = (TextView) view.findViewById(R.id.list_movie_releasedate_textview);
+            txtvoteavg = (TextView) view.findViewById(R.id.list_movierating_textview);
+            view.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int dateMovieIdIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+            mClickHandler.onClick(dateMovieIdIndex,this);
+           // mICM.onClick(this);
         }
     }
 

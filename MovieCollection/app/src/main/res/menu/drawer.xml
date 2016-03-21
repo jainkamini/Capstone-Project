@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+        <group android:checkableBehavior="single">
+
+            <item
+                android:id="@+id/poular"
+                android:checked="false"
+                android:icon="@drawable/ic_inbox_black"
+                android:title="@string/nevi_title_popular" />
+
+            <item
+                android:id="@+id/toprated"
+                android:checked="false"
+                android:icon="@drawable/ic_star_black"
+                android:title="@string/nevi_title_toprated" />
+
+            <item
+                android:id="@+id/upcoming"
+                android:checked="false"
+                android:icon="@drawable/ic_send_black"
+                android:title="@string/nevi_title_upcoming" />
+
+            <item
+                android:id="@+id/nowplaying"
+                android:checked="false"
+                android:icon="@drawable/ic_drafts_black"
+                android:title="@string/nevi_title_nowplaying" />
+
+
+            <item
+                android:id="@+id/favorite"
+                android:checked="false"
+                android:icon="@drawable/ic_email_black"
+                android:title="@string/nevi_title_favorite" />
+
+
+        </group>
+</menu>

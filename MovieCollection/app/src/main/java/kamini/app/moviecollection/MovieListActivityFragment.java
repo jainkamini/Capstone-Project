@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import kamini.app.moviecollection.data.FetchService;
+import kamini.app.moviecollection.data.MovieContract;
 
 
 /**
@@ -35,9 +38,25 @@ public class MovieListActivityFragment extends Fragment implements
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
+    private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
     private boolean mIsRefreshing = false;
+    private String movieSelection;
+    private String movieStatus;
     public MovieListActivityFragment() {
+    }
+
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri, MovieAdapter.ViewHolder vh);
     }
 
     @Override
@@ -47,6 +66,8 @@ public class MovieListActivityFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
 
+        movieSelection=this.getArguments().getString("movieselection");
+        movieStatus=this.getArguments().getString("moviestatus");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
 
@@ -75,10 +96,13 @@ public class MovieListActivityFragment extends Fragment implements
 
        // mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        // recyclerView.setAdapter(movieAdapter);
+
+
         getLoaderManager().initLoader(0, null, this);
 
         IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
         filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
+
         LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(mRefreshingReceiver,
                 filter);
         if (savedInstanceState == null) {
@@ -92,7 +116,10 @@ public class MovieListActivityFragment extends Fragment implements
 
 
    private void refresh() {
-      getActivity(). startService(new Intent(getActivity(), FetchService.class));
+       Intent inputIntent=(new Intent(getActivity(), FetchService.class));
+       inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, movieSelection);
+       getActivity(). startService(inputIntent);
+       //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
    }
 
     @Override
@@ -128,7 +155,7 @@ public class MovieListActivityFragment extends Fragment implements
     };
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return MovieLoader.newMovieInstance(this.getActivity());
+        return MovieLoader.newMovieInstance(this.getActivity(),movieStatus);
     }
 
 
@@ -136,13 +163,30 @@ public class MovieListActivityFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        movieAdapter=new MovieAdapter(getActivity(),cursor);
+      //  movieAdapter=new MovieAdapter(getActivity(),MovieAdapter.MovieAdapterOnClickHandler()
+
+                movieAdapter = new MovieAdapter(getActivity(), new MovieAdapter.MovieAdapterOnClickHandler() {
+
+                    @Override
+                    public void onClick(int movieId, MovieAdapter.ViewHolder vh) {
+                        ((Callback) getActivity())
+                                .onItemSelected(MovieContract.MovieEntry.CONTENT_URI
+                                        ,
+                                        vh
+                                );
+                    }
+
+
+                }, cursor   );
+
 
         if(movieAdapter.getItemCount()==0){
             mEmptyView.setVisibility(View.VISIBLE);
         } else{
             mEmptyView.setVisibility(View.GONE);
         }
+
+
         mRecyclerView.setAdapter(movieAdapter);
 
     }

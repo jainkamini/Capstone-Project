@@ -12,9 +12,10 @@ import kamini.app.moviecollection.data.MovieContract;
 public class MovieLoader extends CursorLoader {
 
 
-    public static MovieLoader newMovieInstance(Context context) {
+    public static MovieLoader newMovieInstance(Context context,String movieSelection) {
       //  return new MovieLoader(context, MovieContract.Items.buildDirUri());
-        return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
+       // return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
+       return new MovieLoader(context, MovieContract.MovieEntry.buildMovieStatus(movieSelection));
        // CONTENT_URI
     }
 

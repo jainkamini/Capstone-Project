@@ -23,11 +23,11 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_ID = 101;
     static final int TRAILAR = 102;
     static final int REVIEW = 103;
-    static final int MOVIE_WITH_FAVORITE_STATUS = 104;
+    static final int MOVIE_WITH_STATUS = 104;
 
     private static final SQLiteQueryBuilder ScoreQuery =
             new SQLiteQueryBuilder();
-    private static final String MOVIE_BY_FAVOURITESTATUS = MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = ?";
+    private static final String MOVIE_BY_STATUS = MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?";
 
 
 
@@ -45,13 +45,17 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE);
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
-        matcher.addURI(authority,"favoriteStatus" , MOVIE_WITH_FAVORITE_STATUS);
+        matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
+       // matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
 
 
 
 
         return matcher;
     }
+
+
+
 
 
     @Override
@@ -76,8 +80,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.TrailerEntry.CONTENT_ITEM_TYPE;
             case REVIEW :
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
-            case MOVIE_WITH_FAVORITE_STATUS:
-                return MovieContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_WITH_STATUS:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
 
 
             default:
@@ -116,6 +120,17 @@ public class MovieProvider extends ContentProvider {
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
+
+
+            }
+            case MOVIE_WITH_STATUS: {
+
+                long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = MovieContract.MovieEntry.buildMovieUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
             }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -145,6 +160,10 @@ public class MovieProvider extends ContentProvider {
             case REVIEW:
                 rowsDeleted = db.delete(
                         MovieContract.ReviewEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case MOVIE_WITH_STATUS:
+                rowsDeleted = db.delete(
+                        MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -217,7 +236,7 @@ public class MovieProvider extends ContentProvider {
             case MOVIE_ID: {
 
                // final String _id = uri.getPathSegments().get(1);
-                 //  moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+                //moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
@@ -232,16 +251,18 @@ public class MovieProvider extends ContentProvider {
 
             }
 
-            case MOVIE_WITH_FAVORITE_STATUS: {
-                // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+            case MOVIE_WITH_STATUS: {
+
+                String MovieStatus = MovieContract.MovieEntry.getMovieStatusUri(uri);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        MOVIE_BY_FAVOURITESTATUS,
-                        selectionArgs,
+                        MOVIE_BY_STATUS,
+                        new String[]{MovieStatus},
                         null,
                         null,
                         sortOrder);
+
 
                 break;
 

@@ -8,6 +8,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_nevigation_drawer">NevigationDrawerActivity</string>
+    <string name="iamgenotavaliable">No Image</string>
 
   <!--  <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -17,11 +18,17 @@
     <string name="nevi_title_upcoming">Upcoming</string>
     <string name="nevi_title_nowplaying">Now Playing</string>
     <string name="nevi_title_favorite">Favorite</string>
+    <string name="popular">popularity.desc</string>
+    <string name="toprated">vote_average.desc</string>
+    <string name="upcoming">upcoming.desc</string>
+    <string name="nowplaying">Nowplaying.desc</string>
+    <string name="favorite">Favorite</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="closeDrawer">Navigation View</string>
+    <string name="openDrawer">Navigation View Closed</string>
 
     <string name="action_example">Example action</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
 
 </resources>
