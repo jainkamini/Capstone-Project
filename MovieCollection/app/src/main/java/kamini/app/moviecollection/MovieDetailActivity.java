@@ -1,24 +1,42 @@
 package kamini.app.moviecollection;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MovieDetailActivity extends AppCompatActivity {
+    public static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
     FragmentPagerAdapter adapterViewPager;
+    public static final Bundle arguments=new Bundle() ;
+    ViewPager mviewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        ViewPager vpPager = (ViewPager) findViewById(R.id.view_pager);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
-        vpPager.setAdapter(adapterViewPager);
-        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        /**
+         * Instantiate a ViewPager and a PagerAdapter
+         */
+        mviewPager = (ViewPager) findViewById(R.id.view_pager);
+       // if (viewPager != null) {
+            setupViewPager(mviewPager);
+       // }
+       // adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+       // vpPager.setAdapter(adapterViewPager);
+        mviewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             // This method will be invoked when a new page becomes selected.
             @Override
@@ -40,44 +58,71 @@ public class MovieDetailActivity extends AppCompatActivity {
                 // Code goes here
             }
         });
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mviewPager);
+
+
+
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+
+           // arguments = new Bundle();
+            arguments.putParcelable(MovieDetailFragment.DETAIL_URI, getIntent().getData());
+            Log.e(LOG_TAG,"MovieDetailacivity:"+ getIntent().getData());
+            //  arguments.putBoolean(MovieDetailActivity.DETAIL_TRANSITION_ANIMATION, true);
+
+          /*  MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_detail_movie, fragment)
+                    .commit();*/
+
+            // Being here means we are in animation mode
+            //  supportPostponeEnterTransition();
+        }
+
+
     }
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 3;
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter.addFragment(new MovieDetailFragment(), "MOVIE");
+        adapter.addFragment(new MovieDetailFragment(), "SIMILAR MOVIES");
 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
+
+        viewPager.setAdapter(adapter);
+    }
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
         }
 
+        public void addFragment(Fragment fragment, String title) {
 
-
-
-        // Returns total number of pages
-        @Override
-        public int getCount() {
-            return NUM_ITEMS;
+            mFragments.add(fragment);
+            mFragments.get(0).setArguments(arguments);
+            mFragmentTitles.add(title);
         }
 
-        // Returns the fragment to display for that page
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0: // Fragment # 0 - This will show FirstFragment
-                    return MovieDetailActivityFragment.newInstance(0, "Page # 1");
-                case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return MovieDetailActivityFragment.newInstance(1, "Page # 2");
-                case 2: // Fragment # 1 - This will show SecondFragment
-                    return MovieDetailActivityFragment.newInstance(2, "Page # 3");
-                default:
-                    return null;
-            }
+            return mFragments.get(position);
         }
 
-        // Returns the page title for the top indicator
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Page " + position;
+            return mFragmentTitles.get(position);
         }
-
     }
 
 }

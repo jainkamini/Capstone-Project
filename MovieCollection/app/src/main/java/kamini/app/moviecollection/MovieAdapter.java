@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import kamini.app.moviecollection.data.MovieContract;
-
 /**
  * Created by Kamini on 3/12/2016.
  */
@@ -35,7 +33,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }*/
 
     public static interface MovieAdapterOnClickHandler {
-        void onClick(int movieId, ViewHolder vh);
+        void onClick(Long movieId, ViewHolder vh);
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -93,8 +91,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            int dateMovieIdIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
-            mClickHandler.onClick(dateMovieIdIndex,this);
+           // int dateMovieIdIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+            int dateMovieIdIndex = mCursor.getInt(MovieLoader.Query.movieid);
+            mClickHandler.onClick(new Long(dateMovieIdIndex),this);
+            Log.e(MovieListActivityFragment.LOG_TAG,"Movieuriadapter"+dateMovieIdIndex);
            // mICM.onClick(this);
         }
     }

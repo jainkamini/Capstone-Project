@@ -78,24 +78,26 @@ public class MovieContract {
 
         public static Uri buildMovieStatus(String movieStatus)
         {
-            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_STATUS,movieStatus).build();
-        }
-        public static Uri buildMovieFavoriteSatus() {
-            return CONTENT_URI.buildUpon().appendPath("favoriteStatus").build();
+            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_STATUS, movieStatus).build();
         }
 
-        public static Uri buildMovieFavoriteSatus(String movieStatus) {
-            return CONTENT_URI.buildUpon().appendPath((movieStatus)).build();
+
+        public static Uri buildMovieId(Long movieid)
+        {
+            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_ID,Long.toString(movieid) ).appendPath("movieid").build();
+
         }
 
-        /** Read moviesStatus  item detail URI. */
-        public static String getMovieStatus(Uri movieUri) {
-            return movieUri.getPathSegments().get(1);
-        }
 
         public static String getMovieStatusUri(Uri uri) {
             String movieStatus = uri.getQueryParameter(COLUMN_MOVIE_STATUS);
-           return movieStatus;
+            return movieStatus;
+        }
+
+
+        public static String getMovieIdUri(Uri uri) {
+            String movieid = uri.getQueryParameter(COLUMN_MOVIE_ID);
+           return movieid;
         }
     }
     public static final class TrailerEntry implements BaseColumns {

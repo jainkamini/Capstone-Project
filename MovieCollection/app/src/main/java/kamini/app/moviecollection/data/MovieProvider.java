@@ -24,10 +24,12 @@ public class MovieProvider extends ContentProvider {
     static final int TRAILAR = 102;
     static final int REVIEW = 103;
     static final int MOVIE_WITH_STATUS = 104;
+    static final int MOVIE_WITH_ID = 105;
 
-    private static final SQLiteQueryBuilder ScoreQuery =
+    private static final SQLiteQueryBuilder MovieQuery =
             new SQLiteQueryBuilder();
     private static final String MOVIE_BY_STATUS = MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?";
+    private static final String MOVIE_BY_ID = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
 
 
 
@@ -46,7 +48,8 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
         matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
-       // matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
+        matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*" , MOVIE_WITH_ID);
+
 
 
 
@@ -71,7 +74,7 @@ public class MovieProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            // Student: Uncomment and fill out these two cases
+
             case MOVIE:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_ID :
@@ -81,6 +84,8 @@ public class MovieProvider extends ContentProvider {
             case REVIEW :
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
             case MOVIE_WITH_STATUS:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_WITH_ID:
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
 
 
@@ -216,6 +221,10 @@ public class MovieProvider extends ContentProvider {
         moviequeryBuilder.setTables(MovieContract.MovieEntry.TABLE_NAME);
 
         Cursor retCursor;
+        final int match = sUriMatcher.match(uri);
+
+
+
         switch (sUriMatcher.match(uri)) {
             case MOVIE: {
 
@@ -235,13 +244,13 @@ public class MovieProvider extends ContentProvider {
 
             case MOVIE_ID: {
 
-               // final String _id = uri.getPathSegments().get(1);
+                final String _id = uri.getPathSegments().get(1);
                 //moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        selection,
-                        selectionArgs,
+                        MovieContract.MovieEntry._ID + " = ?",
+                        new String[]{_id},
                         null,
                         null,
                         sortOrder);
@@ -250,6 +259,8 @@ public class MovieProvider extends ContentProvider {
 
 
             }
+
+
 
             case MOVIE_WITH_STATUS: {
 
@@ -268,6 +279,24 @@ public class MovieProvider extends ContentProvider {
 
 
             }
+
+            case MOVIE_WITH_ID: {
+                String mMovieid = MovieContract.MovieEntry.getMovieIdUri(uri);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        MOVIE_BY_ID,
+                        new String[]{mMovieid},
+                        null,
+                        null,
+                        sortOrder);
+
+
+                break;
+
+
+            }
+
             case TRAILAR: {
                 // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(

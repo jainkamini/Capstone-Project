@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -133,9 +134,10 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
     @Override
     public void onItemSelected(Uri contentUri, MovieAdapter.ViewHolder vh) {
-        Intent intent = new Intent(this, MovieDetailActivity.class);
+        Intent intent = new Intent(this, MovieDetailActivity.class)
+        .setData(contentUri);
         startActivity(intent);
-
+        Log.e(LOG_TAG, "Mainactivity uri :" + contentUri);
        /* if (mTwoPane) {
             Bundle args = new Bundle();
             if (value != null) {

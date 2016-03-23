@@ -56,7 +56,8 @@ public class MovieListActivityFragment extends Fragment implements
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri, MovieAdapter.ViewHolder vh);
+        public void onItemSelected(Uri MovieUri, MovieAdapter.ViewHolder vh);
+
     }
 
     @Override
@@ -168,9 +169,9 @@ public class MovieListActivityFragment extends Fragment implements
                 movieAdapter = new MovieAdapter(getActivity(), new MovieAdapter.MovieAdapterOnClickHandler() {
 
                     @Override
-                    public void onClick(int movieId, MovieAdapter.ViewHolder vh) {
+                    public void onClick(Long movieId, MovieAdapter.ViewHolder vh) {
                         ((Callback) getActivity())
-                                .onItemSelected(MovieContract.MovieEntry.CONTENT_URI
+                                .onItemSelected(MovieContract.MovieEntry.buildMovieId(movieId)
                                         ,
                                         vh
                                 );
