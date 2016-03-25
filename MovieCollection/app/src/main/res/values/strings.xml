@@ -23,6 +23,7 @@
     <string name="upcoming">upcoming.desc</string>
     <string name="nowplaying">Nowplaying.desc</string>
     <string name="favorite">Favorite</string>
+    <string name="similar">Similar</string>
 
     <string name="closeDrawer">Navigation View</string>
     <string name="openDrawer">Navigation View Closed</string>

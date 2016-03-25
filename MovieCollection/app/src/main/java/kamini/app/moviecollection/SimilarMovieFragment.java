@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +26,17 @@ import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class MovieListActivityFragment extends Fragment implements
-        android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>  {
+public class SimilarMovieFragment extends Fragment    implements
+        LoaderManager.LoaderCallbacks<Cursor>  {
 
-    public static final String LOG_TAG = MovieListActivityFragment.class.getSimpleName();
+    public static final String LOG_TAG = SimilarMovieFragment.class.getSimpleName();
 
 
-
+    static final String DETAIL_URI = "URI";
+    private Uri mUri;
+    static final Long MOVIE_ID=12345678910L;
+    private Long mMovieId;
+    private Long mMovieIdNew;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyView;
@@ -42,7 +45,10 @@ public class MovieListActivityFragment extends Fragment implements
     private boolean mIsRefreshing = false;
     private String movieSelection;
     private String movieStatus;
-    public MovieListActivityFragment() {
+    private static final int DETAIL_LOADER = 0;
+
+
+    public SimilarMovieFragment() {
     }
 
 
@@ -63,13 +69,23 @@ public class MovieListActivityFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_similar_movie, container, false);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(MovieDetailFragment.DETAIL_URI);
+            mMovieId=arguments.getLong(String.valueOf(MovieDetailFragment.MOVIE_ID));
+           // mMovieIdNew=mMovieIdNew.valueOf(mMovieId);
+          //  mMovieId = new Long(mUri.getPathSegments().get(1));
+            // mTransitionAnimation = arguments.getBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION, false);
+            Log.e(LOG_TAG, "arguments:" + arguments);
+            Log.e(LOG_TAG,"Movieuri:" + mUri);
+        }
 
 
-        movieSelection=this.getArguments().getString("movieselection");
-        movieStatus=this.getArguments().getString("moviestatus");
+        movieSelection="Similar";
+        movieStatus="S";
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
+       /* mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
 
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.primary,
@@ -82,7 +98,7 @@ public class MovieListActivityFragment extends Fragment implements
                 // This is just a placeholder.
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-        });
+        });*/
 
 
         //   movieAdapter = new MovieAdapter(items);
@@ -96,7 +112,6 @@ public class MovieListActivityFragment extends Fragment implements
 
         // mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // recyclerView.setAdapter(movieAdapter);
-
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -118,6 +133,7 @@ public class MovieListActivityFragment extends Fragment implements
     private void refresh() {
         Intent inputIntent=(new Intent(getActivity(), FetchService.class));
         inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, movieSelection);
+        inputIntent.putExtra(FetchService.EXTRA_MOVIE_ID, String.valueOf(mMovieId));
         getActivity(). startService(inputIntent);
         //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
     }
@@ -155,7 +171,7 @@ public class MovieListActivityFragment extends Fragment implements
     };
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return MovieLoader.newMovieInstance(this.getActivity(),movieStatus);
+        return MovieLoader.newMovieInstance(getContext(), movieStatus,mMovieId);
     }
 
 

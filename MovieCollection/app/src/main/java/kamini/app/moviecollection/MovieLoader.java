@@ -1,7 +1,8 @@
 package kamini.app.moviecollection;
 
 import android.content.Context;
-import android.content.CursorLoader;
+
+import android.support.v4.content.CursorLoader;
 import android.net.Uri;
 
 import kamini.app.moviecollection.data.MovieContract;
@@ -17,6 +18,12 @@ public class MovieLoader extends CursorLoader {
        // return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
        return new MovieLoader(context, MovieContract.MovieEntry.buildMovieStatus(movieSelection));
        // CONTENT_URI
+    }
+    public static MovieLoader newMovieInstance(Context context,String movieSelection,Long movieID) {
+        //  return new MovieLoader(context, MovieContract.Items.buildDirUri());
+        // return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
+        return new MovieLoader(context, MovieContract.MovieEntry.buildMovieStatus(movieSelection));
+        // CONTENT_URI
     }
 
    /* public static MovieLoader newInstanceForItemId(Context context, long itemId) {
@@ -38,6 +45,7 @@ public class MovieLoader extends CursorLoader {
                 MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
                 MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,
                 MovieContract.MovieEntry.COLUMN_MOVIE_RATING,
+                MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
 
         };
 int _id=0;
@@ -49,6 +57,7 @@ int _id=0;
         int original_title=6;
         int vote_count=7;
         int vote_average=8;
+        int back_drop=9;
 
 
     }

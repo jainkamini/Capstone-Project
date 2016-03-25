@@ -40,7 +40,11 @@ public class FetchService extends IntentService
                 = "kamini.app.moviecollection.data.intent.extra.REFRESHING";
         public static final String BROADCAST_ACTION_NO_CONNECTIVITY
                 = "kamini.app.moviecollection.data.intent.action.NO_CONNECTIVITY";
+        public static final String EXTRA_MOVIE_ID=
+                "kamini.app.moviecollection.data.intent.extra.MOVIED_ID";
 public String movieSelection;
+        public String mMovieId;
+
         public String movieStatus;
 
         Call<TheMovieDBResult> call;
@@ -54,26 +58,33 @@ public String movieSelection;
         if (bundle !=null)
         {
             movieSelection=  bundle.getString(EXTRA_MOVIESELECTION);
+            mMovieId=bundle.getString(EXTRA_MOVIE_ID);
             if (movieSelection.equals("Popular"))
             {
                 movieStatus="P";
-                getData(this.getResources().getString(R.string.popular));
+                getMovieData(this.getResources().getString(R.string.popular));
 
             }
             else if (movieSelection.equals("Toprated"))
             {
                 movieStatus="T";
-                getData(this.getResources().getString(R.string.toprated));
+                getMovieData(this.getResources().getString(R.string.toprated));
             }
             else if (movieSelection.equals("Upcoming"))
             {
                 movieStatus="U";
-                getData(this.getResources().getString(R.string.upcoming));
+                getMovieData(this.getResources().getString(R.string.upcoming));
             }
             else if (movieSelection.equals("Nowplaying"))
             {
                 movieStatus="N";
-                getData(this.getResources().getString(R.string.nowplaying));
+                getMovieData(this.getResources().getString(R.string.nowplaying));
+            }
+            else if (movieSelection.equals("Similar"))
+            {
+                movieStatus="S";
+                getSimilarMovieData(this.getResources().getString(R.string.similar));
+                Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
             }
             Log.d(LOG_TAG, "Movie Selection. " +movieSelection);
         }
@@ -83,10 +94,11 @@ public String movieSelection;
 
     }
 
-    public void getData(String movieSelectiontype)
+    public void getSimilarMovieData(String movieSelectiontype)
     {
 
-          final String API_BASE_URL = "http://api.themoviedb.org/3/discover/";
+          //final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+mMovieId+"/similar/";
+        final String API_BASE_URL = "  http://api.themoviedb.org/3/movie/"+mMovieId+"/";
 
              TheMovieDBResult movieresult;
          List<MovieItem> items;
@@ -99,8 +111,8 @@ public String movieSelection;
                 .build();
         TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
-         //       call =  theMovieDBAPI.getMovieResponse( "vote_average.desc", "b85cf4603ce5916a993dd400866808bc");
-        call =  theMovieDBAPI.getMovieResponse(movieSelectiontype, "b85cf4603ce5916a993dd400866808bc");
+
+        call =  theMovieDBAPI.getSimilarMovieResponse( "b85cf4603ce5916a993dd400866808bc");
         call.enqueue(new Callback<TheMovieDBResult>() {
             @Override
             public void onResponse(Response<TheMovieDBResult> response) {
@@ -135,6 +147,58 @@ public String movieSelection;
 
 
     }
+        public void getMovieData(String movieSelectiontype)
+        {
+
+            final String API_BASE_URL = "http://api.themoviedb.org/3/discover/";
+
+            TheMovieDBResult movieresult;
+            List<MovieItem> items;
+            MovieAdapter movieAdapter;
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
+
+            //       call =  theMovieDBAPI.getMovieResponse( "vote_average.desc", "b85cf4603ce5916a993dd400866808bc");
+            call =  theMovieDBAPI.getMovieResponse(movieSelectiontype, "b85cf4603ce5916a993dd400866808bc");
+            call.enqueue(new Callback<TheMovieDBResult>() {
+                @Override
+                public void onResponse(Response<TheMovieDBResult> response) {
+                    try {
+                        TheMovieDBResult movieresult;
+                        movieresult = response.body();
+                        List<MovieItem> items;
+                        items = movieresult.getresults();
+                        // movieAdapter.swapList(items);
+                        InsertData(items);
+
+                        Log.e(LOG_TAG, "url:" + movieresult);
+                        Log.e(LOG_TAG, "response = " + new Gson().toJson(movieresult));
+
+                    } catch (NullPointerException e) {
+                        Toast toast = null;
+                        if (response.code() == 401) {
+                            toast = Toast.makeText(getApplication(), "Unauthenticated", Toast.LENGTH_SHORT);
+                        } else if (response.code() >= 400) {
+                            toast = Toast.makeText(getApplication(), "Client Error " + response.code()
+                                    + " " + response.message(), Toast.LENGTH_SHORT);
+                        }
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("getMovie threw: ", t.getMessage());
+                }
+            });
+
+
+        }
 
 
         public void InsertData(List<MovieItem> items)
@@ -155,7 +219,20 @@ public String movieSelection;
 
                 movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, items.get(i).getTitle());
                 movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,items.get(i).getOverview());
+
+                if (items.get(i).getOverview()==null)
+                {
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,"No Overview");
+                }
+                else
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,items.get(i).getOverview());
+                if (items.get(i).getBackdrop_path()==null) {
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, this.getResources().getString(R.string.iamgenotavaliable));
+                }
+                else
+                {
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, items.get(i).getBackdrop_path());
+                }
                 if (items.get(i).getPoster_path()==null) {
 
                     movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, this.getResources().getString(R.string.iamgenotavaliable));

@@ -25,6 +25,7 @@ public class MovieItem {
     int id;
     String title;
     String poster_path;
+    String backdrop_path;
     String overview;
     String release_date;
     String original_title;
@@ -78,6 +79,22 @@ Double vote_average;
 
     public String getOverview() {
         return overview;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
+    }
+
+    public List<Integer> getGenre_ids() {
+        return genre_ids;
+    }
+
+    public void setGenre_ids(List<Integer> genre_ids) {
+        this.genre_ids = genre_ids;
     }
 
     public void setOverview(String overview) {

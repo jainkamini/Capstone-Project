@@ -1,11 +1,11 @@
 package kamini.app.moviecollection;
 
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 
 
 public class MainActivity extends AppCompatActivity implements MovieListActivityFragment.Callback{
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
     public  void setFragment( String movieType,String movieStatus)
     {
         MovieListActivityFragment fragment = new MovieListActivityFragment();
-        FragmentTransaction frTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction frTransaction = getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("movieselection", movieType);
         bundle.putString("moviestatus", movieStatus );
@@ -132,12 +133,14 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         frTransaction.commit();
     }
 
+
     @Override
-    public void onItemSelected(Uri contentUri, MovieAdapter.ViewHolder vh) {
+    public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
         Intent intent = new Intent(this, MovieDetailActivity.class)
         .setData(contentUri);
+                intent.putExtra("MovieId", mMovieId);
         startActivity(intent);
-        Log.e(LOG_TAG, "Mainactivity uri :" + contentUri);
+        Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
        /* if (mTwoPane) {
             Bundle args = new Bundle();
             if (value != null) {

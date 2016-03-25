@@ -1,4 +1,6 @@
 package kamini.app.moviecollection;
+
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import kamini.app.moviecollection.data.MovieContract;
 
 
@@ -21,13 +25,16 @@ import kamini.app.moviecollection.data.MovieContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MovieDetailFragment extends Fragment  implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieDetailFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>   {
     public static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
     // Store instance variables
     private String title;
     private int page;
     static final String DETAIL_URI = "URI";
     private Uri mUri;
+    static final Long MOVIE_ID=12345678910L;
+    private Long mMovieId;
     private boolean mTransitionAnimation;
 
     private static final int DETAIL_LOADER = 0;
@@ -42,6 +49,8 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
             MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
             MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,
             MovieContract.MovieEntry.COLUMN_MOVIE_RATING,
+            MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
+
     };
 
     public static final int _ID = 0;
@@ -53,12 +62,15 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
     public static final int COL_MOVIE_TITLE = 6;
     public static final int COL_MOVIE_VOTECOUNT = 7;
     public static final int COL_MOVIE_RATING = 8;
+    public static final int COL_MOVIE_BACKDROP = 9;
     public TextView txttitle;
     public TextView txtname;
     public TextView txtvotecount;
     public ImageView imgposter;
+    public ImageView imgbackdrop;
     public TextView  txtdate;
     public TextView txtvoteavg;
+    public TextView txtoverview;
 
     // Store instance variables based on arguments passed
     @Override
@@ -67,13 +79,16 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
         Bundle arguments = getArguments();
         if (arguments != null) {
             mUri = arguments.getParcelable(MovieDetailFragment.DETAIL_URI);
+            mMovieId=arguments.getLong(String.valueOf(MovieDetailFragment.MOVIE_ID));
            // mTransitionAnimation = arguments.getBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION, false);
             Log.e(LOG_TAG,"arguments:" + arguments);
-            Log.e(LOG_TAG,"Movieuri:" + mUri);
+            Log.e(LOG_TAG,"Movieid..........:" + mMovieId);
         }
 
-
+        /*page = getArguments().getInt("someInt", 0);
+        title = getArguments().getString("someTitle");*/
     }
+
 
     // Inflate the view for the fragment based on layout XML
     @Override
@@ -81,7 +96,15 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         txttitle= (TextView) view.findViewById(R.id.list_movie_title_textview);
-        imgposter=(ImageView)view.findViewById(R.id.list_movie_imageview);
+        imgbackdrop=(ImageView)view.findViewById(R.id.list_backdrop_imageview);
+        imgposter=(ImageView)view.findViewById(R.id.list_movieposter_imageview);
+        txtname=(TextView)view.findViewById(R.id.list_movie_name_textview);
+        txtdate=(TextView)view.findViewById(R.id.list_movie_releasedate_textview);
+        txtvoteavg=(TextView)view.findViewById(R.id.list_movierating_textview);
+        txtvotecount=(TextView)view.findViewById(R.id.list_movie_votecount_textview);
+        txtoverview=(TextView)view.findViewById(R.id.list_overview_textview);
+
+
        // getLoaderManager().initLoader(DETAIL_LOADER, null, this);
       //  tvLabel.setText(page + " -- " + title);
         return view;
@@ -94,20 +117,20 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
     }
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      //  if ( null != mUri ) {
-            // Now create and return a CursorLoader that will take care of
-            // creating a Cursor for the data being displayed.
-            return new CursorLoader(
-                    getActivity(),
-                    mUri,
-                    DETAIL_COLUMNS,
-                    null,
-                    null,
-                    null
-            );
+       if ( null != mUri ) {
+           // Now create and return a CursorLoader that will take care of
+           // creating a Cursor for the data being displayed.
+               return new CursorLoader(
+                   getActivity(),
+                   mUri,
+                   DETAIL_COLUMNS,
+                   null,
+                   null,
+                   null
+           );
 
-
-
+       }
+return null;
     }
 
     @Override
@@ -118,8 +141,17 @@ public class MovieDetailFragment extends Fragment  implements LoaderManager.Load
         if (data != null && data.moveToFirst() )
         {
            // Log.e(LOG_TAG, "cursorcount:" + data.getCount());
-              txttitle.setText(data.getString(COL_MOVIE_TITLE));
-         //   Log.e(LOG_TAG,"MovieTitle:" + data.getString(COL_MOVIE_TITLE));
+             txttitle.setText(data.getString(COL_MOVIE_TITLE));
+            txtname.setText(data.getString(COL_MOVIE_NAME));
+            txtvotecount.setText(data.getString(COL_MOVIE_VOTECOUNT));
+            txtvoteavg.setText(data.getString(COL_MOVIE_RATING));
+            txtdate.setText(data.getString(COL_MOVIE_DATE));
+            txtoverview.setText(data.getString(COL_MOVIE_OVERVIEW));
+
+            Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_BACKDROP)).into(imgbackdrop);
+            Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_POSTER)).into(imgposter);
+
+            //   Log.e(LOG_TAG,"MovieTitle:" + data.getString(COL_MOVIE_TITLE));
 
         }
     }
