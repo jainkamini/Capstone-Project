@@ -11,6 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 
 public class MovieDetailActivity extends AppCompatActivity implements SimilarMovieFragment.Callback{
@@ -26,6 +29,14 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         setContentView(R.layout.activity_movie_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+       /* getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Movie");*/
+        /*final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        ab.setDisplayHomeAsUpEnabled(true);*/
+
 
         /**
          * Instantiate a ViewPager and a PagerAdapter
@@ -96,6 +107,28 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_share) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
         Intent intent = new Intent(this, MovieDetailActivity.class)
@@ -128,6 +161,19 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
     }
 
 
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_movie_detail, menu);
+
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+
+    }
    /* private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new MovieDetailFragment(), "MOVIE");

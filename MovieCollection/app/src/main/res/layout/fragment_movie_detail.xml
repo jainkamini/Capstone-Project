@@ -1,10 +1,22 @@
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+
+    android:fillViewport="true">
+
 <LinearLayout xmlns:Android="http://schemas.Android.com/apk/res/Android"
     xmlns:tools="http://schemas.Android.com/tools"
     xmlns:card_view="http://schemas.Android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -55,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+
                 android:scaleType="centerCrop"
 
                 />
@@ -88,8 +101,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="16dp"
 
-                        android:maxLines="1"
-                        android:singleLine="true"
+
                         android:ellipsize="end" />
                     <TextView
                         android:id="@+id/list_movie_votecount_textview"
@@ -100,8 +112,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="16dp"
 
-                        android:maxLines="1"
-                        android:singleLine="true"
+
                         android:ellipsize="end" />
                 </LinearLayout>
                 <LinearLayout
@@ -117,8 +128,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="16dp"
 
-                        android:maxLines="1"
-                        android:singleLine="true"
+
                         android:ellipsize="end" />
                     <TextView
                         android:id="@+id/list_movierating_textview"
@@ -129,8 +139,7 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="16dp"
 
-                        android:maxLines="1"
-                        android:singleLine="true"
+
                         android:ellipsize="end" />
                 </LinearLayout>
             </LinearLayout>
@@ -151,7 +160,22 @@
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         android:orientation="vertical"
-        android:foreground="?selectableItemBackground">
+        android:foreground="?selectableItemBackground"
+       >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView
+            android:id="@+id/list_overview_heading"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:text="Overview"
+
+            android:ellipsize="end" />
         <TextView
             android:id="@+id/list_overview_textview"
             style="@style/TextAppearance.AppCompat.Body1"
@@ -161,9 +185,54 @@
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
 
-            android:maxLines="1"
-            android:singleLine="true"
-            android:ellipsize="end" />
+
+            />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/review_cardview"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        android:orientation="vertical"
+        android:foreground="?selectableItemBackground"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView
+                android:id="@+id/list_review_heading"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:text="Review"
+
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_review_textview"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:text="I actually enjoyed the movie so much that i'll recommend it to all my friends, at first i didn't really want to watch it because i'm not into super hero movies at all, but i did anyway, i mean people were talking so much about it i had to see it myself and what an awesome choice i made. The good thing about this movie is that Deadpool is a hero but in a very comedic way, you don't usually expect comedy from a superhero film but this one was full of comedy and the way they treated the plot was amazing, it was there, humor was there in every scene, even when there was fighting or romance or any other scene, the writers managed to add comedy everywhere in a very good way that'll surprisingly make you want to watch it again, and again. Thank you for taking the time read my review and if you're asking yourself if you should watch this movie, it's a definite Yes. -------- Wong
+A funny movie with a romantic love story.    Wade Wilson (Ryan Reynolds) is a former Special Forces operative who now works as a mercenary. His world comes crashing down when evil scientist Ajax (Ed Skrein) tortures, disfigures and transforms him into Deadpool.     The rogue experiment leaves Deadpool with accelerated healing powers and a twisted sense of humor. With help from mutant allies Colossus and Negasonic Teenage Warhead (Brianna Hildebrand), Deadpool uses his new skills to hunt down the man who nearly destroyed his life. -------- huy.duc.eastagile"
+                ></TextView>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     </LinearLayout>
+</ScrollView>

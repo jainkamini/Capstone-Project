@@ -26,10 +26,42 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_WITH_STATUS = 104;
     static final int MOVIE_WITH_ID = 105;
 
-    private static final SQLiteQueryBuilder MovieQuery =
+    private static final SQLiteQueryBuilder sMovieQueryBuilder =
             new SQLiteQueryBuilder();
     private static final String MOVIE_BY_STATUS = MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?";
-    private static final String MOVIE_BY_ID = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
+   // private static final String MOVIE_BY_ID = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
+
+
+    private static final String MOVIE_BY_ID =   MovieContract.MovieEntry.TABLE_NAME+
+            "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
+
+    static{
+        sMovieQueryBuilder.setTables(
+
+                MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
+                        MovieContract.MovieEntry.TABLE_NAME +
+                        " ON " + MovieContract.ReviewEntry.TABLE_NAME +
+                        "." + MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY +
+                        " = " + MovieContract.MovieEntry.TABLE_NAME +
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+
+
+    }
+
+    private Cursor getMovieByReview(
+            Uri uri, String[] projection, String sortOrder,String mMovieid) {
+     //   String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
+
+
+        return sMovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                MOVIE_BY_ID,
+                new String[]{mMovieid},
+                null,
+                null,
+                sortOrder
+        );
+    }
 
 
 
@@ -218,7 +250,7 @@ public class MovieProvider extends ContentProvider {
         // and query the database accordingly.
 
         SQLiteQueryBuilder moviequeryBuilder = new SQLiteQueryBuilder();
-        moviequeryBuilder.setTables(MovieContract.MovieEntry.TABLE_NAME);
+      //  moviequeryBuilder.setTables(MovieContract.MovieEntry.TABLE_NAME);
 
         Cursor retCursor;
         final int match = sUriMatcher.match(uri);
@@ -282,14 +314,16 @@ public class MovieProvider extends ContentProvider {
 
             case MOVIE_WITH_ID: {
                 String mMovieid = MovieContract.MovieEntry.getMovieIdUri(uri);
-                retCursor = mOpenHelper.getReadableDatabase().query(
+                /*retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
                         MOVIE_BY_ID,
                         new String[]{mMovieid},
                         null,
                         null,
-                        sortOrder);
+                        sortOrder);*/
+                retCursor  = getMovieByReview(
+                        uri,  projection,  sortOrder,mMovieid) ;
 
 
                 break;
@@ -337,7 +371,7 @@ public class MovieProvider extends ContentProvider {
 
 
 
-    @Override
+   /* @Override
     public int bulkInsert(Uri uri, ContentValues[] values)
     {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -367,6 +401,77 @@ public class MovieProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri,values);
         }
+    }*/
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values)
+    {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        switch (match)
+        {
+            case MOVIE: {
+                db.beginTransaction();
+                int returncount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insertWithOnConflict(MovieContract.MovieEntry.TABLE_NAME, null, value,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        if (_id != -1) {
+                            returncount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returncount;
+            }
+
+
+            case REVIEW: {
+                db.beginTransaction();
+                int returncount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insertWithOnConflict(MovieContract.ReviewEntry.TABLE_NAME, null, value,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        if (_id != -1) {
+                            returncount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returncount;
+            }
+
+            case TRAILAR: {
+                db.beginTransaction();
+                int returncount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insertWithOnConflict(MovieContract.TrailerEntry.TABLE_NAME, null, value,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        if (_id != -1) {
+                            returncount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returncount;
+            }
+            default:
+                return super.bulkInsert(uri,values);
+        }
     }
+
+
 
 }

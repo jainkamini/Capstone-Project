@@ -1,6 +1,10 @@
 package kamini.app.moviecollection;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,15 +12,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
 
@@ -36,12 +43,12 @@ public class MovieDetailFragment extends Fragment implements
     static final Long MOVIE_ID=12345678910L;
     private Long mMovieId;
     private boolean mTransitionAnimation;
-
+private  String mReviewContent="Review";
     private static final int DETAIL_LOADER = 0;
 
     private static final String[] DETAIL_COLUMNS = {
-            MovieContract.MovieEntry._ID,
-            MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieContract.MovieEntry.TABLE_NAME + "." +  MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.TABLE_NAME + "." +    MovieContract.MovieEntry.COLUMN_MOVIE_ID,
             MovieContract.MovieEntry.COLUMN_MOVIE_NAME,
             MovieContract.MovieEntry.COLUMN_MOVIE_POSTER,
             MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
@@ -50,6 +57,8 @@ public class MovieDetailFragment extends Fragment implements
             MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,
             MovieContract.MovieEntry.COLUMN_MOVIE_RATING,
             MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
+            MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT,
+            MovieContract.ReviewEntry.COLUMN_REVIEW_AUTHOR,
 
     };
 
@@ -63,6 +72,8 @@ public class MovieDetailFragment extends Fragment implements
     public static final int COL_MOVIE_VOTECOUNT = 7;
     public static final int COL_MOVIE_RATING = 8;
     public static final int COL_MOVIE_BACKDROP = 9;
+    public static final int COL_MOVIE_REVIEWCONTENT = 10;
+    public static final int COL_MOVIE_REVIEWAUTHOR = 11;
     public TextView txttitle;
     public TextView txtname;
     public TextView txtvotecount;
@@ -71,6 +82,8 @@ public class MovieDetailFragment extends Fragment implements
     public TextView  txtdate;
     public TextView txtvoteavg;
     public TextView txtoverview;
+    public TextView txtreview;
+    private boolean mIsRefreshing = false;
 
     // Store instance variables based on arguments passed
     @Override
@@ -103,18 +116,57 @@ public class MovieDetailFragment extends Fragment implements
         txtvoteavg=(TextView)view.findViewById(R.id.list_movierating_textview);
         txtvotecount=(TextView)view.findViewById(R.id.list_movie_votecount_textview);
         txtoverview=(TextView)view.findViewById(R.id.list_overview_textview);
+        txtreview=(TextView)view.findViewById(R.id.list_review_textview);
 
+        getLoaderManager().initLoader(0, null, this);
 
+        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
+        filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
+
+        LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(mRefreshingReceiver,
+                filter);
+        if (savedInstanceState == null) {
+            refresh();
+        }
        // getLoaderManager().initLoader(DETAIL_LOADER, null, this);
       //  tvLabel.setText(page + " -- " + title);
         return view;
     }
-//this function for start the loader
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
+    private void refresh() {
+        Intent inputIntent=(new Intent(getActivity(), FetchService.class));
+        inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, "Detail");
+        inputIntent.putExtra(FetchService.EXTRA_MOVIE_ID, String.valueOf(mMovieId));
+        getActivity(). startService(inputIntent);
+        //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getActivity().registerReceiver(mRefreshingReceiver,
+                new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(mRefreshingReceiver);
+    }
+
+    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (FetchService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                mIsRefreshing = intent.getBooleanExtra(FetchService.EXTRA_REFRESHING, false);
+                //updateRefreshingUI();
+            }
+            else if (FetchService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())) {
+                mIsRefreshing=false;
+                // updateRefreshingUI();
+                Toast.makeText(getActivity(), getString(R.string.empty_recycler_view_no_network), Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
        if ( null != mUri ) {
@@ -151,7 +203,38 @@ return null;
             Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_BACKDROP)).into(imgbackdrop);
             Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_POSTER)).into(imgposter);
 
-            //   Log.e(LOG_TAG,"MovieTitle:" + data.getString(COL_MOVIE_TITLE));
+
+
+
+           mReviewContent="";
+            for (int i=0;i<data.getCount();i++) {
+                data.moveToPosition(i);
+                mReviewContent = mReviewContent +  data.getString(COL_MOVIE_REVIEWCONTENT)+ System.getProperty ("line.separator")+ System.getProperty ("line.separator");
+                //txtreview.setText(txtreview.getText()+ data.getString(COL_MOVIE_REVIEWCONTENT));
+                Log.e(LOG_TAG,"review content:" +mReviewContent);
+            }
+
+         //   txtreview.setText(mReviewContent);
+          //  txtreview.setText("");
+           /* mReviewContent="";
+            for (int i=0;i<data.getCount();i++) {
+                data.moveToPosition(i);
+                if (i==0) {
+                    mReviewContent=data.getString(COL_MOVIE_REVIEWCONTENT)+System.getProperty("line.separator");
+                  //  txtreview.setText(  data.getString(COL_MOVIE_REVIEWCONTENT) + System.getProperty("line.separator") + System.getProperty("line.separator"));
+                   // Log.e(LOG_TAG, "review content:" + txtreview.getText());
+                }
+                else
+                    mReviewContent=mReviewContent+data.getString(COL_MOVIE_REVIEWCONTENT)+System.getProperty("line.separator");
+                  // txtreview.setText( txtreview.getText() + data.getString(COL_MOVIE_REVIEWCONTENT) + System.getProperty("line.separator") + System.getProperty("line.separator"));
+
+             //   mReviewContent = mReviewContent +  data.getString(COL_MOVIE_REVIEWCONTENT)+ System.getProperty ("line.separator")+ System.getProperty ("line.separator");
+                //txtreview.setText(txtreview.getText()+ data.getString(COL_MOVIE_REVIEWCONTENT));
+              //  Log.e(LOG_TAG, "review content:" + txtreview.getText());
+            }*/
+           // txtreview.setText(mReviewContent);
+
+            Log.e(LOG_TAG,"datacount:" + data.getCount());
 
         }
     }

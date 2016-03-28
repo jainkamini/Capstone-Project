@@ -48,13 +48,14 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 // the ID of the location entry associated with this weather data
                 TrailerEntry.COLUMN_MOVIEID_KEY + " INTEGER NOT NULL, " +
-                TrailerEntry.COLUMN_MOVIE_KEY + " TEXT NOT NULL, " +
+                TrailerEntry.COLUMN_TRAILER_KEY + " TEXT NOT NULL, " +
                TrailerEntry.COLUMN_TRAILER_NMAE + " TEXT NOT NULL, " +
+                TrailerEntry.COLUMN_TRAILER_ID + " TEXT NOT NULL, " +
 
 
 
                 " FOREIGN KEY (" + TrailerEntry.COLUMN_MOVIEID_KEY+ ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
+                MovieEntry.TABLE_NAME + " (" + MovieEntry.COLUMN_MOVIE_ID + ") " +
 
                ");";
 
@@ -68,11 +69,14 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 // the ID of the location entry associated with this weather data
                 ReviewEntry.COLUMN_MOVIEID_KEY + " INTEGER NOT NULL, " +
-                ReviewEntry.COLUMN_MOVIE_AUTHOR + " TEXT NOT NULL, " +
-                ReviewEntry.COLUMN_MOVIE_CONTENT + " TEXT NOT NULL, " +
-                // Set up the location column as a foreign key to location table.
+                ReviewEntry.COLUMN_REVIEW_AUTHOR + " TEXT NOT NULL, " +
+                ReviewEntry.COLUMN_REVIEW_CONTENT + " TEXT NOT NULL, " +
+                ReviewEntry.COLUMN_REVIEW_ID + " TEXT NOT NULL, " +
+                ReviewEntry.COLUMN_REVIEW_URL + " TEXT NOT NULL, " +
+
+
                 " FOREIGN KEY (" + TrailerEntry.COLUMN_MOVIEID_KEY+ ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + ") " +
+                MovieEntry.TABLE_NAME + " (" + MovieEntry.COLUMN_MOVIE_ID + ") " +
 
                 ");";
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);

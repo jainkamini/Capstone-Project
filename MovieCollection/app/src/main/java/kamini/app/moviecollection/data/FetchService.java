@@ -16,6 +16,10 @@ import kamini.app.moviecollection.MovieAdapter;
 import kamini.app.moviecollection.R;
 import kamini.app.moviecollection.api.TheMovieDBService;
 import kamini.app.moviecollection.models.MovieItem;
+import kamini.app.moviecollection.models.MovieReviewItem;
+import kamini.app.moviecollection.models.MovieReviewResult;
+import kamini.app.moviecollection.models.MovieTrailerItem;
+import kamini.app.moviecollection.models.MovieTrailerResult;
 import kamini.app.moviecollection.models.TheMovieDBResult;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +52,8 @@ public String movieSelection;
         public String movieStatus;
 
         Call<TheMovieDBResult> call;
+        Call<MovieReviewResult> callReview;
+        Call<MovieTrailerResult> callTrailer;
     public FetchService() {
         super(TAG);
     }
@@ -86,6 +92,14 @@ public String movieSelection;
                 getSimilarMovieData(this.getResources().getString(R.string.similar));
                 Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
             }
+
+            else if (movieSelection.equals("Detail"))
+            {
+
+               getMovieReviewData();
+                getMovieTrailerData();
+                Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
+            }
             Log.d(LOG_TAG, "Movie Selection. " +movieSelection);
         }
 
@@ -112,7 +126,7 @@ public String movieSelection;
         TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
 
-        call =  theMovieDBAPI.getSimilarMovieResponse( "b85cf4603ce5916a993dd400866808bc");
+        call =  theMovieDBAPI.getSimilarMovieResponse("b85cf4603ce5916a993dd400866808bc");
         call.enqueue(new Callback<TheMovieDBResult>() {
             @Override
             public void onResponse(Response<TheMovieDBResult> response) {
@@ -147,6 +161,116 @@ public String movieSelection;
 
 
     }
+
+
+
+
+        public void getMovieReviewData()
+        {
+
+            //final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+mMovieId+"/similar/";
+            final String API_BASE_URL = "  http://api.themoviedb.org/3/movie/"+mMovieId+"/";
+
+            MovieReviewResult movieresult;
+            List<MovieReviewItem> items;
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
+callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808bc");
+
+           // call =  theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808bc");
+            callReview.enqueue(new Callback<MovieReviewResult>() {
+                @Override
+                public void onResponse(Response<MovieReviewResult> response) {
+                    try {
+                        MovieReviewResult movieresult;
+                        movieresult = response.body();
+                        List<MovieReviewItem> items;
+                        items = movieresult.getresults();
+                        // movieAdapter.swapList(items);
+                        InsertReviewData(items);
+
+                        Log.e(LOG_TAG, "url:" + movieresult);
+                        Log.e(LOG_TAG, "response = " + new Gson().toJson(movieresult));
+
+                    } catch (NullPointerException e) {
+                        Toast toast = null;
+                        if (response.code() == 401) {
+                            toast = Toast.makeText(getApplication(), "Unauthenticated", Toast.LENGTH_SHORT);
+                        } else if (response.code() >= 400) {
+                            toast = Toast.makeText(getApplication(), "Client Error " + response.code()
+                                    + " " + response.message(), Toast.LENGTH_SHORT);
+                        }
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("getMovie threw: ", t.getMessage());
+                }
+            });
+
+
+        }
+        public void getMovieTrailerData()
+        {
+
+            //final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+mMovieId+"/similar/";
+            final String API_BASE_URL = "  http://api.themoviedb.org/3/movie/"+mMovieId+"/";
+
+            MovieTrailerResult movieresult;
+            List<MovieTrailerResult> items;
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
+
+
+            callTrailer =  theMovieDBAPI.getMovieVideoResponse("b85cf4603ce5916a993dd400866808bc");
+            callTrailer.enqueue(new Callback<MovieTrailerResult>() {
+                @Override
+                public void onResponse(Response<MovieTrailerResult> response) {
+                    try {
+                        MovieTrailerResult movieresult;
+                        movieresult = response.body();
+                        List<MovieTrailerItem> items;
+                        items = movieresult.getresults();
+                        // movieAdapter.swapList(items);
+                        InsertTrailerData(items);
+
+                        Log.e(LOG_TAG, "url:" + movieresult);
+                        Log.e(LOG_TAG, "response = " + new Gson().toJson(movieresult));
+
+                    } catch (NullPointerException e) {
+                        Toast toast = null;
+                        if (response.code() == 401) {
+                            toast = Toast.makeText(getApplication(), "Unauthenticated", Toast.LENGTH_SHORT);
+                        } else if (response.code() >= 400) {
+                            toast = Toast.makeText(getApplication(), "Client Error " + response.code()
+                                    + " " + response.message(), Toast.LENGTH_SHORT);
+                        }
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("getMovie threw: ", t.getMessage());
+                }
+            });
+
+
+        }
         public void getMovieData(String movieSelectiontype)
         {
 
@@ -257,6 +381,81 @@ public String movieSelection;
                  getApplicationContext().getContentResolver().bulkInsert(
                         MovieContract.MovieEntry.CONTENT_URI,cvValue);
                 Log.d(LOG_TAG, "Sync Complete. " + values.size() + " Inserted");
+            }
+        }
+        public void InsertReviewData(List<MovieReviewItem> items)
+        {
+
+
+
+            int i;
+            // Context mContext;
+            Vector<ContentValues> values = new Vector <ContentValues> (items.size());
+// delete old movie type which is not favorite so we don't build up an endless history
+            getApplicationContext().getContentResolver().delete(MovieContract.ReviewEntry.CONTENT_URI,
+                    MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY + " = ?",
+                    new String[]{ mMovieId});
+            for (i=0 ;i<items.size();i++)
+            {
+                ContentValues movie_value = new ContentValues();
+                movie_value.put(MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY, mMovieId);
+                movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_AUTHOR, items.get(i).getAuthor());
+                if(items.get(i).getAuthor()==null) {
+                    movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT, items.get(i).getContent().replace("\r\n","  "));
+                }
+                    else
+
+                    movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT, items.get(i).getContent().replace("\r\n","  ")+" -------- "
+                    +items.get(i).getAuthor());
+
+                movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, items.get(i).getId());
+                movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_URL, items.get(i).getUrl());
+
+                values.add(movie_value);
+
+                Log.d(LOG_TAG, "review content . " + items.get(i).getContent());
+            }
+
+            if (values.size()>0)
+            {
+
+                ContentValues[] cvValue = new ContentValues[values.size()];
+                values.toArray(cvValue);
+                getApplicationContext().getContentResolver().bulkInsert(
+                        MovieContract.ReviewEntry.CONTENT_URI,cvValue);
+                Log.d(LOG_TAG, "Sync Review Complete. " + values.size() + " Inserted");
+            }
+        }
+        public void InsertTrailerData(List<MovieTrailerItem> items)
+        {
+            int i;
+            // Context mContext;
+            Vector<ContentValues> values = new Vector <ContentValues> (items.size());
+// delete old movie type which is not favorite so we don't build up an endless history
+            getApplicationContext().getContentResolver().delete(MovieContract.TrailerEntry.CONTENT_URI,
+                    MovieContract.TrailerEntry.COLUMN_MOVIEID_KEY + " = ?",
+                    new String[]{ mMovieId});
+            for (i=0 ;i<items.size();i++)
+            {
+                ContentValues movie_value = new ContentValues();
+                movie_value.put(MovieContract.TrailerEntry.COLUMN_MOVIEID_KEY, mMovieId);
+                movie_value.put(MovieContract.TrailerEntry.COLUMN_TRAILER_KEY, items.get(i).getKey());
+                movie_value.put(MovieContract.TrailerEntry.COLUMN_TRAILER_ID, items.get(i).getId());
+                movie_value.put(MovieContract.TrailerEntry.COLUMN_TRAILER_NMAE, items.get(i).getName());
+
+                values.add(movie_value);
+
+                Log.d(LOG_TAG, "Movie Name. " +items.get(i).getName());
+            }
+
+            if (values.size()>0)
+            {
+
+                ContentValues[] cvValue = new ContentValues[values.size()];
+                values.toArray(cvValue);
+                getApplicationContext().getContentResolver().bulkInsert(
+                        MovieContract.TrailerEntry.CONTENT_URI,cvValue);
+                Log.d(LOG_TAG, "Sync Trailer Complete. " + values.size() + " Inserted");
             }
         }
 }

@@ -1,5 +1,7 @@
 package kamini.app.moviecollection.api;
 
+import kamini.app.moviecollection.models.MovieReviewResult;
+import kamini.app.moviecollection.models.MovieTrailerResult;
 import kamini.app.moviecollection.models.TheMovieDBResult;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,6 +25,14 @@ public final class TheMovieDBService {
             @GET("similar")
             Call<TheMovieDBResult> getSimilarMovieResponse(
                                                     @Query("api_key") String apiKey);
+
+            @GET("reviews")
+            Call<MovieReviewResult> getMovieReviewResponse(
+                    @Query("api_key") String apiKey);
+
+            @GET("videos")
+            Call<MovieTrailerResult> getMovieVideoResponse(
+                    @Query("api_key") String apiKey);
 
 
         }
