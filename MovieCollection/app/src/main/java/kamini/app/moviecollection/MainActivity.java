@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
+        setFragment("Popular","P");
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -57,16 +57,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
                 switch (menuItem.getItemId()) {
 
 
-                    //Replacing the main content with ContentFragment Which is our Inbox View;
-                   /* case R.id.inbox:
-                        Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
-                       *//* ContentFragment fragment = new ContentFragment();
-                        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.frame, fragment);
-                        fragmentTransaction.commit();*//*
-                        return true;*/
 
-                    // For rest of the options we just show a toast on click
 
                     case R.id.poular:
 

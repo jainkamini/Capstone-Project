@@ -54,6 +54,10 @@
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/list_movie_cardviewDetail"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        android:orientation="vertical"
         android:foreground="?selectableItemBackground">
 
         <LinearLayout
