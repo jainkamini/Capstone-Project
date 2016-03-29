@@ -43,12 +43,22 @@ public class MovieProvider extends ContentProvider {
     static{
         sMovieQueryBuilder.setTables(
 
-               MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
+               /*MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.MovieEntry.TABLE_NAME +
                         " ON " + MovieContract.ReviewEntry.TABLE_NAME +
                         "." + MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
-                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);*/
+
+
+
+
+        MovieContract.MovieEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                MovieContract.ReviewEntry.TABLE_NAME +
+                " ON " + MovieContract.ReviewEntry.TABLE_NAME +
+                "." + MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY +
+                " = " + MovieContract.MovieEntry.TABLE_NAME +
+                "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
 
                /* MovieContract.MovieEntry.TABLE_NAME +" m "+
                 " INNER JOIN " + MovieContract.ReviewEntry.TABLE_NAME
@@ -64,8 +74,15 @@ public class MovieProvider extends ContentProvider {
     static{
         sMovieTrailerQueryBuilder.setTables(
 
-                MovieContract.TrailerEntry.TABLE_NAME + " INNER JOIN " +
+               /* MovieContract.TrailerEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.MovieEntry.TABLE_NAME +
+                        " ON " + MovieContract.TrailerEntry.TABLE_NAME +
+                        "." + MovieContract.TrailerEntry.COLUMN_MOVIEID_KEY +
+                        " = " + MovieContract.MovieEntry.TABLE_NAME +
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);*/
+
+                MovieContract.MovieEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                        MovieContract.TrailerEntry.TABLE_NAME +
                         " ON " + MovieContract.TrailerEntry.TABLE_NAME +
                         "." + MovieContract.TrailerEntry.COLUMN_MOVIEID_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
