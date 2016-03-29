@@ -87,9 +87,9 @@ public class MovieContract {
             return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_STATUS, movieStatus).build();
         }
 
-        public static Uri buildMovieFavoriteStatus(String movieStatus,String mfavorite)
+        public static Uri buildMovieFavoriteStatus(String movieStatus,String mfavorite,String mfavoritestatus)
         {
-            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_FAVORITESTATUS, movieStatus).appendPath("movieid").appendPath("mfavorite").build();
+            return CONTENT_URI.buildUpon().appendQueryParameter(COLUMN_MOVIE_FAVORITESTATUS, movieStatus).appendPath("moviestatus").appendPath("mfavorite").appendPath("favoritestatus").build();
         }
 
         public static Uri buildMovieId(Long movieid)

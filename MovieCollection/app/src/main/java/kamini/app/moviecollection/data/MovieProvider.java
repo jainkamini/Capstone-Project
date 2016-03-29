@@ -135,7 +135,7 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*" , MOVIE_WITH_ID);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*/*" , MOVIETRAILER_WITH_ID);
-
+        matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*/*/*" , MOVIE_WITH_FAVORITESTATUS);
 
 
 
@@ -164,7 +164,7 @@ public class MovieProvider extends ContentProvider {
             /*case MOVIE:
                 return MovieContract.MovieEntry.CONTENT_TYPE;*/
             case MOVIE:
-                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
+                return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_ID :
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             case TRAILAR :
@@ -175,7 +175,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_WITH_ID:
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
-
+            case MOVIE_WITH_FAVORITESTATUS:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -246,6 +247,11 @@ public class MovieProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case MOVIE_ID:
+                rowsDeleted = db.delete(
+                        MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+
             case TRAILAR:
                 rowsDeleted = db.delete(
                         MovieContract.TrailerEntry.TABLE_NAME, selection, selectionArgs);
@@ -278,6 +284,14 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE:
+
+                rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            case MOVIE_ID:
+                rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+            case MOVIE_WITH_STATUS:
 
                 rowsUpdated = db.update(MovieContract.MovieEntry.TABLE_NAME, values, selection,
                         selectionArgs);
@@ -335,11 +349,19 @@ public class MovieProvider extends ContentProvider {
                 final String _id = uri.getPathSegments().get(1);
                 //moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
 
-                retCursor = mOpenHelper.getReadableDatabase().query(
+                /*retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
                         MovieContract.MovieEntry._ID + " = ?",
                         new String[]{_id},
+                        null,
+                        null,
+                        sortOrder);*/
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
                         null,
                         null,
                         sortOrder);

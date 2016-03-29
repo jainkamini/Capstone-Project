@@ -50,8 +50,11 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
     private static final int DETAIL_LOADER = 0;
     private String movieSelection="Detail";
     public static String mShareTrailerKey;
+    private static int mFavoriteStatus;
     private static final String MOVIE_TRAILER_SHARE = "http://www.youtube.com/watch?v=";
-
+    private static FloatingActionButton   fab;
+// java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.design.widget.FloatingActionButton.setImageDrawable(android.graphics.drawable.Drawable)' on a null object reference
+    //java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.design.widget.FloatingActionButton.setImageResource(int)' on a null object reference
     private static final String[] DETAIL_COLUMNS = {
             MovieContract.MovieEntry.TABLE_NAME + "." +  MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.TABLE_NAME + "." +    MovieContract.MovieEntry.COLUMN_MOVIE_ID,
@@ -93,6 +96,34 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+
+            // arguments = new Bundle();
+
+            arguments.putParcelable(MovieDetailFragment.DETAIL_URI, getIntent().getData());
+
+            mUri=getIntent().getData();
+            mMovieId=getIntent().getExtras().getLong("MovieId");
+            arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), getIntent().getExtras().getLong("MovieId"));
+
+           /* arguments.putParcelable(SimilarMovieFragment.DETAIL_URI, getIntent().getData());
+            arguments.putString(SimilarMovieFragment.MOVIE_ID, getIntent().getExtras().toString());*/
+
+            Log.e(LOG_TAG, "MovieDetailacivity id...:" + getIntent().getExtras().getLong("MovieId"));
+            //  arguments.putBoolean(MovieDetailActivity.DETAIL_TRANSITION_ANIMATION, true);
+
+          /*  MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_detail_movie, fragment)
+                    .commit();*/
+
+            // Being here means we are in animation mode
+            //  supportPostponeEnterTransition();
+        }
        /* getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Movie");*/
         /*final ActionBar ab = getSupportActionBar();
@@ -139,41 +170,38 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mFavoriteStatus=checkFavorite();
+        if (mFavoriteStatus==1)
+        {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
+        }
+
+        else
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveFavorite();
+
+
+
+
+
+
             }
         });
-
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-
-            // arguments = new Bundle();
-
-            arguments.putParcelable(MovieDetailFragment.DETAIL_URI, getIntent().getData());
-
-            mUri=getIntent().getData();
-            mMovieId=getIntent().getExtras().getLong("MovieId");
-            arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), getIntent().getExtras().getLong("MovieId"));
-
-           /* arguments.putParcelable(SimilarMovieFragment.DETAIL_URI, getIntent().getData());
-            arguments.putString(SimilarMovieFragment.MOVIE_ID, getIntent().getExtras().toString());*/
-
-            Log.e(LOG_TAG, "MovieDetailacivity id...:" + getIntent().getExtras().getLong("MovieId"));
-            //  arguments.putBoolean(MovieDetailActivity.DETAIL_TRANSITION_ANIMATION, true);
-
-          /*  MovieDetailFragment fragment = new MovieDetailFragment();
-            fragment.setArguments(arguments);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_detail_movie, fragment)
-                    .commit();*/
-
-            // Being here means we are in animation mode
-            //  supportPostponeEnterTransition();
+        /*mFavoriteStatus=checkFavorite();
+        if (mFavoriteStatus==1)
+        {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
         }
+
+        else
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));*/
+
+
        // getLoaderManager().initLoader(DETAIL_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
         getSupportLoaderManager().initLoader(0, null, this);
         IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
@@ -187,15 +215,50 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
     }
 
-    private void saveFavorite()
-    {
+    private int saveFavorite() {
         ContentValues movieValues = new ContentValues();
+        if (mFavoriteStatus == 0)
+        {
         movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS,
                 1);
+            int mUpdateStatus = getContentResolver().update(
+                    MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
+            Toast.makeText(this,"Movie Added",Toast.LENGTH_SHORT).show();
+          //  fab.setImageResource(R.drawable.ic_delete_black);
+          //  fab.setBackground(getResources().getDrawable(R.drawable.ic_delete_black));
+
+            return 1;
+
+        }
+        else
+            movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS,
+                    0);
         int mUpdateStatus = getContentResolver().update(
                 MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
+        Toast.makeText(this,"Movie Deleted",Toast.LENGTH_SHORT).show();
+      //  fab.setBackground(getResources().getDrawable(R.drawable.ic_star_black));
 
-Toast.makeText(this,"Movie Added",Toast.LENGTH_SHORT).show();;
+        //   fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));
+     //   fab.setImageResource(R.drawable.ic_star_black);
+        return 0;
+
+
+
+    }
+
+    private int checkFavorite() {
+        Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(mMovieId), null,
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + mMovieId +
+                        " AND " +
+                        MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 1,
+                null, null);
+        if (cursor.getCount() == 0) {
+           return 0;
+
+
+        }
+        else
+            return 1;
     }
     private void refresh() {
         Intent inputIntent=(new Intent(this, FetchService.class));

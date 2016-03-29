@@ -3,6 +3,7 @@ package kamini.app.moviecollection.data;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -331,18 +332,18 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
            // Context mContext;
             Vector<ContentValues> values = new Vector <ContentValues> (items.size());
 // delete old movie type which is not favorite so we don't build up an endless history
-            getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
+            /*getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
                     MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?"  ,
-                    new String[]{ movieStatus});
+                    new String[]{ movieStatus});*/
             for (i=0 ;i<items.size();i++) {
 
-               /* Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null,
+                Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(items.get(i).getId()), null,
                         MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + items.get(i).getId() +
-                        " AND " +
+                                " AND " +
                                 MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,
                         null, null);
-                if (cursor.getCount() != 0) {
-                    getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
+                if (cursor.getCount() == 0) {
+                   /* getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.buildMovieUri(items.get(i).getId()),
                             MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + mMovieId + " AND " +
                                     MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,
                             null);*/
@@ -379,7 +380,7 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
 
                     Log.d(LOG_TAG, "Movie Name. " + items.get(i).getTitle());
                 }
-
+            }
                 if (values.size() > 0) {
 
                     ContentValues[] cvValue = new ContentValues[values.size()];
@@ -387,8 +388,8 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
                     getApplicationContext().getContentResolver().bulkInsert(
                             MovieContract.MovieEntry.CONTENT_URI, cvValue);
                     Log.d(LOG_TAG, "Sync Complete. " + values.size() + " Inserted");
-                }
 
+            }
         }
         public void InsertReviewData(List<MovieReviewItem> items)
         {

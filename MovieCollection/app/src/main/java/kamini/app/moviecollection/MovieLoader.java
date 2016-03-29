@@ -29,7 +29,7 @@ public class MovieLoader extends CursorLoader {
     public static MovieLoader newMovieFaboriteInstance(Context context,String movieSelection) {
         //  return new MovieLoader(context, MovieContract.Items.buildDirUri());
         // return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
-        return new MovieLoader(context, MovieContract.MovieEntry.buildMovieFavoriteStatus(movieSelection,"1"));
+        return new MovieLoader(context, MovieContract.MovieEntry.buildMovieFavoriteStatus(movieSelection,"1","1"));
         // CONTENT_URI
     }
 
@@ -43,8 +43,8 @@ public class MovieLoader extends CursorLoader {
 
     public interface Query {
         String[] PROJECTION = {
-                MovieContract.MovieEntry._ID,
-                MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+                 MovieContract.MovieEntry._ID,
+                  MovieContract.MovieEntry.COLUMN_MOVIE_ID,
                 MovieContract.MovieEntry.COLUMN_MOVIE_NAME,
                 MovieContract.MovieEntry.COLUMN_MOVIE_POSTER,
                 MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
