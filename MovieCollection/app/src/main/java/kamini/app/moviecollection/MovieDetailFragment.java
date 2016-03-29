@@ -175,25 +175,7 @@ return null;
                 Log.e(LOG_TAG,"review content:" +mReviewContent);
             }
 
-         //   txtreview.setText(mReviewContent);
-          //  txtreview.setText("");
-           /* mReviewContent="";
-            for (int i=0;i<data.getCount();i++) {
-                data.moveToPosition(i);
-                if (i==0) {
-                    mReviewContent=data.getString(COL_MOVIE_REVIEWCONTENT)+System.getProperty("line.separator");
-                  //  txtreview.setText(  data.getString(COL_MOVIE_REVIEWCONTENT) + System.getProperty("line.separator") + System.getProperty("line.separator"));
-                   // Log.e(LOG_TAG, "review content:" + txtreview.getText());
-                }
-                else
-                    mReviewContent=mReviewContent+data.getString(COL_MOVIE_REVIEWCONTENT)+System.getProperty("line.separator");
-                  // txtreview.setText( txtreview.getText() + data.getString(COL_MOVIE_REVIEWCONTENT) + System.getProperty("line.separator") + System.getProperty("line.separator"));
-
-             //   mReviewContent = mReviewContent +  data.getString(COL_MOVIE_REVIEWCONTENT)+ System.getProperty ("line.separator")+ System.getProperty ("line.separator");
-                //txtreview.setText(txtreview.getText()+ data.getString(COL_MOVIE_REVIEWCONTENT));
-              //  Log.e(LOG_TAG, "review content:" + txtreview.getText());
-            }*/
-           // txtreview.setText(mReviewContent);
+          txtreview.setText(mReviewContent);
 
             Log.e(LOG_TAG,"datacount:" + data.getCount());
 
