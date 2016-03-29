@@ -1,27 +1,89 @@
 package kamini.app.moviecollection;
 
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+;
+import android.support.v4.content.Loader;
+
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import kamini.app.moviecollection.data.FetchService;
+import kamini.app.moviecollection.data.MovieContract;
 
 
-public class MovieDetailActivity extends AppCompatActivity implements SimilarMovieFragment.Callback{
+public class MovieDetailActivity extends AppCompatActivity implements SimilarMovieFragment.Callback, LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
     FragmentPagerAdapter adapterViewPager;
     public static final Bundle arguments = new Bundle();
-    ViewPager mviewPager;
 
+    ViewPager mviewPager;
+    private boolean mIsRefreshing = false;
+    static final String DETAIL_URI = "URI";
+    private Uri mUri;
+    static final Long MOVIE_ID=12345678910L;
+    private Long mMovieId;
+    private static final int DETAIL_LOADER = 0;
+    private String movieSelection="Detail";
+    public static String mShareTrailerKey;
+    private static final String MOVIE_TRAILER_SHARE = "http://www.youtube.com/watch?v=";
+
+    private static final String[] DETAIL_COLUMNS = {
+            MovieContract.MovieEntry.TABLE_NAME + "." +  MovieContract.MovieEntry._ID,
+            MovieContract.MovieEntry.TABLE_NAME + "." +    MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieContract.MovieEntry.COLUMN_MOVIE_NAME,
+            MovieContract.MovieEntry.COLUMN_MOVIE_POSTER,
+            MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,
+            MovieContract.MovieEntry.COLUMN_MOVIE_DATE,
+            MovieContract.MovieEntry.COLUMN_MOVIE_TITLE,
+            MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,
+            MovieContract.MovieEntry.COLUMN_MOVIE_RATING,
+            MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
+
+            MovieContract.TrailerEntry.COLUMN_TRAILER_KEY,
+            MovieContract.TrailerEntry.COLUMN_TRAILER_NMAE,
+
+
+    };
+
+    public static final int _ID = 0;
+    public static final int COL_MOVIE_ID = 1;
+    public static final int COL_MOVIE_NAME = 2;
+    public static final int COL_MOVIE_POSTER = 3;
+    public static final int COL_MOVIE_OVERVIEW = 4;
+    public static final int COL_MOVIE_DATE = 5;
+    public static final int COL_MOVIE_TITLE = 6;
+    public static final int COL_MOVIE_VOTECOUNT = 7;
+    public static final int COL_MOVIE_RATING = 8;
+    public static final int COL_MOVIE_BACKDROP = 9;
+    public static final int COL_MOVIE_TRAILERKEY = 10;
+    public static final int COL_MOVIE_TRAILERNAME = 11;
+    private static final SQLiteQueryBuilder sMovieQueryBuilder =
+            new SQLiteQueryBuilder();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,6 +107,7 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         // if (viewPager != null) {
         // setupViewPager(mviewPager);
         // }
+     //  getLoaderManager().initLoader(0, null, getBaseContext());
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         mviewPager.setAdapter(adapterViewPager);
         // adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
@@ -72,9 +135,16 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
             }
         });
 
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveFavorite();
+            }
+        });
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -84,7 +154,8 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
             arguments.putParcelable(MovieDetailFragment.DETAIL_URI, getIntent().getData());
 
-
+            mUri=getIntent().getData();
+            mMovieId=getIntent().getExtras().getLong("MovieId");
             arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), getIntent().getExtras().getLong("MovieId"));
 
            /* arguments.putParcelable(SimilarMovieFragment.DETAIL_URI, getIntent().getData());
@@ -103,18 +174,75 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
             // Being here means we are in animation mode
             //  supportPostponeEnterTransition();
         }
+       // getLoaderManager().initLoader(DETAIL_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
+        getSupportLoaderManager().initLoader(0, null, this);
+        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
+        filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshingReceiver,
+                filter);
+        if (savedInstanceState == null) {
+            refresh();
+        }
 
     }
 
+    private void saveFavorite()
+    {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS,
+                1);
+        int mUpdateStatus = getContentResolver().update(
+                MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
+
+Toast.makeText(this,"Movie Added",Toast.LENGTH_SHORT).show();;
+    }
+    private void refresh() {
+        Intent inputIntent=(new Intent(this, FetchService.class));
+        inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, movieSelection);
+        inputIntent.putExtra(FetchService.EXTRA_MOVIE_ID, String.valueOf(mMovieId));
+        startService(inputIntent);
+        //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        // Get the provider and hold onto it to set/change the share intent.
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        // Attach an intent to this ShareActionProvider.  You can update this at any time,
+        // like when the user selects a new piece of data they might like to share.
+        if (mShareActionProvider != null ) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        } else {
+            Log.d(LOG_TAG, "Share Action Provider is null?");
+        }
         return true;
     }
 
+
+    private Intent createShareForecastIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+
+
+        //String title = getResources().getString(R.string.check_serie) + serie.getName();
+       // String shareBody = "https://trakt.tv/search/tvdb/" + serie.getId() + "?id_type=show";
+      //  sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+       // sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, title + " " + shareBody);
+       // startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                MOVIE_TRAILER_SHARE + mShareTrailerKey);
+       // shareIntent.putExtra(Intent.EXTRA_TEXT,"hiiiiiiiiiiiiiiiiiiiiii"+"hello");
+        return shareIntent;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -126,7 +254,12 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         if (id == R.id.action_share) {
             return true;
         }
-
+if (id == R.id.action_play)
+{
+   // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movieTrailer.getmTrailerKey())));
+    //N7gDl9HRsY4
+    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" +mShareTrailerKey)));
+}
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -174,44 +307,69 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
 
     }
-   /* private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new MovieDetailFragment(), "MOVIE");
-        adapter.addFragment(new MovieDetailFragment(), "SIMILAR MOVIES");
 
 
-        viewPager.setAdapter(adapter);
-    }*/
-   /* static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        public Adapter(FragmentManager fm) {
-            super(fm);
-        }
+        registerReceiver(mRefreshingReceiver,
+                new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterReceiver(mRefreshingReceiver);
+    }
 
-        public void addFragment(Fragment fragment, String title) {
-
-            mFragments.add(fragment);
-            mFragments.get(0).setArguments(arguments);
-            mFragmentTitles.add(title);
-        }
-
+    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
+        public void onReceive(Context context, Intent intent) {
+            if (FetchService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                mIsRefreshing = intent.getBooleanExtra(FetchService.EXTRA_REFRESHING, false);
+                //updateRefreshingUI();
+            }
+            else if (FetchService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())) {
+                mIsRefreshing=false;
+                // updateRefreshingUI();
+                Toast.makeText(context, getString(R.string.empty_recycler_view_no_network), Toast.LENGTH_LONG).show();
+            }
         }
+    };
 
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if ( null != mUri ) {
+            // Now create and return a CursorLoader that will take care of
+            // creating a Cursor for the data being displayed.
+            return new CursorLoader(
+                    getApplicationContext(),
+                    MovieContract.MovieEntry.buildMovieTrailerId(mMovieId,"T"),
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
         }
-    }*/
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+
+
+        if (data != null && data.moveToFirst() )
+        {
+
+mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
+
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) { }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 2;

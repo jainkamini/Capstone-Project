@@ -155,9 +155,14 @@ public class MovieListActivityFragment extends Fragment implements
     };
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return MovieLoader.newMovieInstance(this.getActivity(),movieStatus);
-    }
 
+        if (movieStatus == "F") {
+            return MovieLoader.newMovieFaboriteInstance(this.getActivity(), "1");
+        }
+
+        else
+            return MovieLoader.newMovieInstance(this.getActivity(), movieStatus);
+    }
 
 
 

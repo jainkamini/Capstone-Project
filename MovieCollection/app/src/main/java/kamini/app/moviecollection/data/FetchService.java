@@ -332,56 +332,63 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             Vector<ContentValues> values = new Vector <ContentValues> (items.size());
 // delete old movie type which is not favorite so we don't build up an endless history
             getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
-                    MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?",
+                    MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?"  ,
                     new String[]{ movieStatus});
-            for (i=0 ;i<items.size();i++)
-            {
-                ContentValues movie_value = new ContentValues();
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, items.get(i).getId());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, items.get(i).getOriginal_title());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());
+            for (i=0 ;i<items.size();i++) {
 
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, items.get(i).getTitle());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE,items.get(i).getRelease_date());
+               /* Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null,
+                        MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + items.get(i).getId() +
+                        " AND " +
+                                MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,
+                        null, null);
+                if (cursor.getCount() != 0) {
+                    getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
+                            MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + mMovieId + " AND " +
+                                    MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,
+                            null);*/
 
-                if (items.get(i).getOverview()==null)
-                {
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,"No Overview");
+                    ContentValues movie_value = new ContentValues();
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, items.get(i).getId());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, items.get(i).getOriginal_title());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE, items.get(i).getRelease_date());
+
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, items.get(i).getTitle());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_DATE, items.get(i).getRelease_date());
+
+                    if (items.get(i).getOverview() == null) {
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, "No Overview");
+                    } else
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, items.get(i).getOverview());
+                    if (items.get(i).getBackdrop_path() == null) {
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, this.getResources().getString(R.string.iamgenotavaliable));
+                    } else {
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, items.get(i).getBackdrop_path());
+                    }
+                    if (items.get(i).getPoster_path() == null) {
+
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, this.getResources().getString(R.string.iamgenotavaliable));
+                    } else
+                        movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, items.get(i).getPoster_path());
+
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_RATING, items.get(i).getVote_average());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT, items.get(i).getVote_count());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS, items.get(i).getGenreIds().toString());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_STATUS, movieStatus);
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS, 0);
+                    values.add(movie_value);
+
+                    Log.d(LOG_TAG, "Movie Name. " + items.get(i).getTitle());
                 }
-                else
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW,items.get(i).getOverview());
-                if (items.get(i).getBackdrop_path()==null) {
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, this.getResources().getString(R.string.iamgenotavaliable));
+
+                if (values.size() > 0) {
+
+                    ContentValues[] cvValue = new ContentValues[values.size()];
+                    values.toArray(cvValue);
+                    getApplicationContext().getContentResolver().bulkInsert(
+                            MovieContract.MovieEntry.CONTENT_URI, cvValue);
+                    Log.d(LOG_TAG, "Sync Complete. " + values.size() + " Inserted");
                 }
-                else
-                {
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH, items.get(i).getBackdrop_path());
-                }
-                if (items.get(i).getPoster_path()==null) {
 
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, this.getResources().getString(R.string.iamgenotavaliable));
-                }
-                    else
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, items.get(i).getPoster_path());
-
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_RATING,items.get(i).getVote_average());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT,items.get(i).getVote_count());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS,items.get(i).getGenreIds().toString());
-                movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_STATUS, movieStatus);
-                values.add(movie_value);
-
-                Log.d(LOG_TAG, "Movie Name. " +items.get(i).getTitle());
-            }
-
-            if (values.size()>0)
-            {
-
-                ContentValues[] cvValue = new ContentValues[values.size()];
-                values.toArray(cvValue);
-                 getApplicationContext().getContentResolver().bulkInsert(
-                        MovieContract.MovieEntry.CONTENT_URI,cvValue);
-                Log.d(LOG_TAG, "Sync Complete. " + values.size() + " Inserted");
-            }
         }
         public void InsertReviewData(List<MovieReviewItem> items)
         {

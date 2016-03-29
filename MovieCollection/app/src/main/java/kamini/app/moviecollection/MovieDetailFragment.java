@@ -1,10 +1,6 @@
 package kamini.app.moviecollection;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,18 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
 
@@ -44,6 +37,7 @@ public class MovieDetailFragment extends Fragment implements
     private Long mMovieId;
     private boolean mTransitionAnimation;
 private  String mReviewContent="Review";
+    private boolean mIsRefreshing = false;
     private static final int DETAIL_LOADER = 0;
 
     private static final String[] DETAIL_COLUMNS = {
@@ -83,7 +77,7 @@ private  String mReviewContent="Review";
     public TextView txtvoteavg;
     public TextView txtoverview;
     public TextView txtreview;
-    private boolean mIsRefreshing = false;
+
 
     // Store instance variables based on arguments passed
     @Override
@@ -118,54 +112,19 @@ private  String mReviewContent="Review";
         txtoverview=(TextView)view.findViewById(R.id.list_overview_textview);
         txtreview=(TextView)view.findViewById(R.id.list_review_textview);
 
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
 
-        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
-        filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
 
-        LocalBroadcastManager.getInstance(this.getActivity()).registerReceiver(mRefreshingReceiver,
-                filter);
-        if (savedInstanceState == null) {
-            refresh();
-        }
        // getLoaderManager().initLoader(DETAIL_LOADER, null, this);
       //  tvLabel.setText(page + " -- " + title);
         return view;
     }
-    private void refresh() {
-        Intent inputIntent=(new Intent(getActivity(), FetchService.class));
-        inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, "Detail");
-        inputIntent.putExtra(FetchService.EXTRA_MOVIE_ID, String.valueOf(mMovieId));
-        getActivity(). startService(inputIntent);
-        //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        getActivity().registerReceiver(mRefreshingReceiver,
-                new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE));
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().unregisterReceiver(mRefreshingReceiver);
-    }
 
-    private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (FetchService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                mIsRefreshing = intent.getBooleanExtra(FetchService.EXTRA_REFRESHING, false);
-                //updateRefreshingUI();
-            }
-            else if (FetchService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())) {
-                mIsRefreshing=false;
-                // updateRefreshingUI();
-                Toast.makeText(getActivity(), getString(R.string.empty_recycler_view_no_network), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
+
+
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -180,6 +139,8 @@ private  String mReviewContent="Review";
                    null,
                    null
            );
+
+
 
        }
 return null;

@@ -25,10 +25,15 @@ public class MovieProvider extends ContentProvider {
     static final int REVIEW = 103;
     static final int MOVIE_WITH_STATUS = 104;
     static final int MOVIE_WITH_ID = 105;
+    static final int MOVIETRAILER_WITH_ID = 106;
+    static final int MOVIE_WITH_FAVORITESTATUS = 107;
 
     private static final SQLiteQueryBuilder sMovieQueryBuilder =
             new SQLiteQueryBuilder();
+    private static final SQLiteQueryBuilder sMovieTrailerQueryBuilder =
+            new SQLiteQueryBuilder();
     private static final String MOVIE_BY_STATUS = MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?";
+    private static final String MOVIE_BY_FAVORITESTATUS = MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = ?";
    // private static final String MOVIE_BY_ID = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
 
 
@@ -38,15 +43,47 @@ public class MovieProvider extends ContentProvider {
     static{
         sMovieQueryBuilder.setTables(
 
-                MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
+               MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.MovieEntry.TABLE_NAME +
                         " ON " + MovieContract.ReviewEntry.TABLE_NAME +
                         "." + MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
                         "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
 
+               /* MovieContract.MovieEntry.TABLE_NAME +" m "+
+                " INNER JOIN " + MovieContract.ReviewEntry.TABLE_NAME
+                        +" r  "+        " ON " + " m "+
+                "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID   +      " = " +
+                  " r "  + "." +    MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY + " INNER JOIN " + MovieContract.TrailerEntry.TABLE_NAME
+                        +" t "+ " ON " + " m "+ "." +MovieContract.MovieEntry.COLUMN_MOVIE_ID   +      " = "
+                           +" t "+ "."+MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY ) ;*/
+
+
 
     }
+    static{
+        sMovieTrailerQueryBuilder.setTables(
+
+                MovieContract.TrailerEntry.TABLE_NAME + " INNER JOIN " +
+                        MovieContract.MovieEntry.TABLE_NAME +
+                        " ON " + MovieContract.TrailerEntry.TABLE_NAME +
+                        "." + MovieContract.TrailerEntry.COLUMN_MOVIEID_KEY +
+                        " = " + MovieContract.MovieEntry.TABLE_NAME +
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+
+               /* MovieContract.MovieEntry.TABLE_NAME +" m "+
+                " INNER JOIN " + MovieContract.ReviewEntry.TABLE_NAME
+                        +" r  "+        " ON " + " m "+
+                "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID   +      " = " +
+                  " r "  + "." +    MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY + " INNER JOIN " + MovieContract.TrailerEntry.TABLE_NAME
+                        +" t "+ " ON " + " m "+ "." +MovieContract.MovieEntry.COLUMN_MOVIE_ID   +      " = "
+                           +" t "+ "."+MovieContract.ReviewEntry.COLUMN_MOVIEID_KEY ) ;*/
+
+
+
+    }
+
+
 
     private Cursor getMovieByReview(
             Uri uri, String[] projection, String sortOrder,String mMovieid) {
@@ -64,6 +101,21 @@ public class MovieProvider extends ContentProvider {
     }
 
 
+    private Cursor getMovieByTrailer(
+            Uri uri, String[] projection, String sortOrder,String mMovieid) {
+        //   String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
+
+
+        return sMovieTrailerQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                MOVIE_BY_ID,
+                new String[]{mMovieid},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
 
     static UriMatcher buildUriMatcher() {
 
@@ -72,15 +124,17 @@ public class MovieProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE);
+        matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE_WITH_FAVORITESTATUS);
 
        // matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/*/#", MOVIE_ID );
         matcher.addURI(authority,  MovieContract.PATH_MOVIE + "/#", MOVIE_ID );
 
-        matcher.addURI(authority,  MovieContract.PATH_MOVIE, MOVIE);
+
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
         matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*" , MOVIE_WITH_ID);
+        matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*/*" , MOVIETRAILER_WITH_ID);
 
 
 
@@ -107,8 +161,10 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
 
+            /*case MOVIE:
+                return MovieContract.MovieEntry.CONTENT_TYPE;*/
             case MOVIE:
-                return MovieContract.MovieEntry.CONTENT_TYPE;
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             case MOVIE_ID :
                 return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             case TRAILAR :
@@ -278,6 +334,7 @@ public class MovieProvider extends ContentProvider {
 
                 final String _id = uri.getPathSegments().get(1);
                 //moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
@@ -312,18 +369,44 @@ public class MovieProvider extends ContentProvider {
 
             }
 
-            case MOVIE_WITH_ID: {
-                String mMovieid = MovieContract.MovieEntry.getMovieIdUri(uri);
-                /*retCursor = mOpenHelper.getReadableDatabase().query(
+            case MOVIE_WITH_FAVORITESTATUS: {
+
+                String MovieStatus = "1";
+                retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        MOVIE_BY_ID,
-                        new String[]{mMovieid},
+                        MOVIE_BY_FAVORITESTATUS,
+                        new String[]{MovieStatus},
                         null,
                         null,
-                        sortOrder);*/
-                retCursor  = getMovieByReview(
-                        uri,  projection,  sortOrder,mMovieid) ;
+                        sortOrder);
+
+
+                break;
+
+
+            }
+
+            case MOVIE_WITH_ID: {
+                String mMovieid = MovieContract.MovieEntry.getMovieIdUri(uri);
+
+                    retCursor = getMovieByReview(
+                            uri, projection, sortOrder, mMovieid);
+
+
+
+                break;
+
+
+            }
+
+            case MOVIETRAILER_WITH_ID: {
+                String mMovieid = MovieContract.MovieEntry.getMovieIdUri(uri);
+                String trailer = MovieContract.MovieEntry.getMovieTrailerFromUri(uri);
+
+                retCursor = getMovieByTrailer(
+                        uri, projection, sortOrder, mMovieid);
+
 
 
                 break;

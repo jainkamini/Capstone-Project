@@ -26,6 +26,13 @@ public class MovieLoader extends CursorLoader {
         // CONTENT_URI
     }
 
+    public static MovieLoader newMovieFaboriteInstance(Context context,String movieSelection) {
+        //  return new MovieLoader(context, MovieContract.Items.buildDirUri());
+        // return new MovieLoader(context, MovieContract.MovieEntry.CONTENT_URI);
+        return new MovieLoader(context, MovieContract.MovieEntry.buildMovieFavoriteStatus(movieSelection,"1"));
+        // CONTENT_URI
+    }
+
    /* public static MovieLoader newInstanceForItemId(Context context, long itemId) {
         return new MovieLoader(context, MovieContract.MovieEntry.buildMovieUri(itemId));
     }*/
