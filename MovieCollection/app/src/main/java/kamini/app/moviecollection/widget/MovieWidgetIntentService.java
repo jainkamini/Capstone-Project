@@ -2,6 +2,7 @@ package kamini.app.moviecollection.widget;
 
 import android.annotation.TargetApi;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import kamini.app.moviecollection.MainActivity;
 import kamini.app.moviecollection.R;
 import kamini.app.moviecollection.data.MovieContract;
 
@@ -37,7 +39,7 @@ public class MovieWidgetIntentService extends IntentService {
                MovieContract.MovieEntry.COLUMN_MOVIE_ID,
             MovieContract.MovieEntry.COLUMN_MOVIE_NAME,
             MovieContract.MovieEntry.COLUMN_MOVIE_DATE,
-            MovieContract.MovieEntry.COLUMN_MOVIE_POSTER,
+            MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
 
 
     };
@@ -102,16 +104,31 @@ public class MovieWidgetIntentService extends IntentService {
             try {
                 input = new URL("http://image.tmdb.org/t/p/w185"+mMoviePath).openStream();
                 Bitmap bit = BitmapFactory.decodeStream(input);
-                views.setImageViewBitmap(R.id.layout_widget, bit);
+               views.setImageViewBitmap(R.id.img_background, bit);
+             //   views.setInt(R.id.layout_widget,"setBackgroundResource", bit.);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
    //         views.setImageViewResource(R.id.layout_widget,R.drawable.ic_delete_black);
-
+//setBackgroundResource
+          //  views.setInt(R.id.layout_widget,"setBackgroundColor", android.graphics.Color.BLACK);
             views.setTextViewText(R.id.txt_moviename, mMovieName);
             views.setTextViewText(R.id.txt_moviedate, mMoviedate);
+            // Create an Intent to launch MainActivity
+
+            Intent launchIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
+            views.setOnClickPendingIntent(R.id.layout_widget, pendingIntent);
+
+            /*Intent launchIntent = new Intent(this, FetchService.class);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, launchIntent, 0);
+            views.setOnClickPendingIntent(R.id.btn_next, pendingIntent);*/
+
             appWidgetManager.updateAppWidget(appWidgetId, views);
+
+
+
 
         }
 
