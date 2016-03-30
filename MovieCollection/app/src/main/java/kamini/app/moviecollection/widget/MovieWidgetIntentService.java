@@ -6,12 +6,18 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import kamini.app.moviecollection.R;
 import kamini.app.moviecollection.data.MovieContract;
@@ -92,14 +98,14 @@ public class MovieWidgetIntentService extends IntentService {
             RemoteViews views = new RemoteViews(getPackageName(), layoutId);
            // Picasso.with(context).load("http://image.tmdb.org/t/p/w185" + mCursor.getString(MovieLoader.Query.poster_path)).into(holder.imgposter);
 
-           /* InputStream input;
+            InputStream input;
             try {
                 input = new URL("http://image.tmdb.org/t/p/w185"+mMoviePath).openStream();
                 Bitmap bit = BitmapFactory.decodeStream(input);
                 views.setImageViewBitmap(R.id.layout_widget, bit);
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
 
    //         views.setImageViewResource(R.id.layout_widget,R.drawable.ic_delete_black);
 
