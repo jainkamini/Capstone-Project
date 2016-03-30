@@ -19,10 +19,10 @@
         <!-- Default screen margins, per the Android Design guidelines. -->
 <!--Movie Widget-->
 
-    <dimen name="widget_movie_default_width">110dp</dimen>
+    <dimen name="widget_movie_default_width">252dp</dimen>
     <dimen name="widget_movie_default_height">40dp</dimen>
     <dimen name="widget_movie_min_resize_width">40dp</dimen>
     <dimen name="widget_movie_min_resize_height">@dimen/widget_movie_default_height</dimen>
-    <dimen name="widget_movie_large_width">220dp</dimen>
+    <dimen name="widget_movie_large_width">300dp</dimen>
 
 </resources>
