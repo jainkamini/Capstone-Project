@@ -53,6 +53,7 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
     private static int mFavoriteStatus;
     private static final String MOVIE_TRAILER_SHARE = "http://www.youtube.com/watch?v=";
     private static FloatingActionButton   fab;
+    private String mMovieName;
 // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.design.widget.FloatingActionButton.setImageDrawable(android.graphics.drawable.Drawable)' on a null object reference
     //java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.design.widget.FloatingActionButton.setImageResource(int)' on a null object reference
     private static final String[] DETAIL_COLUMNS = {
@@ -95,6 +96,8 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(mMovieName);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -427,7 +430,7 @@ if (id == R.id.action_play)
         {
 
 mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
-
+            mMovieName=data.getString(COL_MOVIE_NAME);
         }
     }
 

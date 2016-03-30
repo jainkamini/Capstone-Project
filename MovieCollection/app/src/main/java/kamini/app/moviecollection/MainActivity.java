@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        setFragment("Popular","P");
+        setFragment("Upcoming","U");
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 

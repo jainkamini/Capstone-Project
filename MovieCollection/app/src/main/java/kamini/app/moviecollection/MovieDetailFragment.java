@@ -174,9 +174,11 @@ return null;
                 //txtreview.setText(txtreview.getText()+ data.getString(COL_MOVIE_REVIEWCONTENT));
                 Log.e(LOG_TAG,"review content:" +mReviewContent);
             }
-
-          txtreview.setText(mReviewContent);
-
+if (mReviewContent.equals(null)) {
+    txtreview.setText(getResources().getString(R.string.review_text));
+}
+            else
+    txtreview.setText(mReviewContent);
             Log.e(LOG_TAG,"datacount:" + data.getCount());
 
         }

@@ -1,41 +1,14 @@
-<!--
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/ytlogo"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-   <TextView
-       android:layout_width="match_parent"
-       android:text="upcoming"
-       android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:text="movienameeeeeeeeeeeee"
-        android:layout_gravity="bottom"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="match_parent"
-        android:text="Date"
-        android:layout_gravity="bottom"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>-->
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-android:id="@+id/layout_widget_image"
+    android:id="@+id/layout_widget"
 
-   android:background="@drawable/ytlogo"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
 
     <TextView
         android:layout_width="match_parent"
@@ -66,6 +39,6 @@ android:id="@+id/layout_widget_image"
         android:id="@+id/btn_next"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:background="@drawable/ic_star_black"
         android:layout_marginStart="147dp" />
 </RelativeLayout>
-

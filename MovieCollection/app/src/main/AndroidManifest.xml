@@ -34,6 +34,28 @@
             android:name=".MovieDetailActivity"
             android:label="@string/title_activity_movie_detail" >
         </activity>
+
+
+
+
+        <!-- Movie Widget -->
+        <receiver android:name=".widget.MovieWidgetProvider"
+            android:label="@string/title_widget_movie" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_movie" />
+        </receiver>-->
+
+        <service
+            android:name=".widget.MovieWidgetIntentService"
+
+            />
     </application>
+
 
 </manifest>

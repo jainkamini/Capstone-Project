@@ -275,7 +275,7 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
         public void getMovieData(String movieSelectiontype)
         {
 
-            final String API_BASE_URL = "http://api.themoviedb.org/3/discover/";
+            final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+movieSelectiontype+"/";
 
             TheMovieDBResult movieresult;
             List<MovieItem> items;
@@ -289,7 +289,8 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
             //       call =  theMovieDBAPI.getMovieResponse( "vote_average.desc", "b85cf4603ce5916a993dd400866808bc");
-            call =  theMovieDBAPI.getMovieResponse(movieSelectiontype, "b85cf4603ce5916a993dd400866808bc");
+           // call =  theMovieDBAPI.getMovieResponse(movieSelectiontype, "b85cf4603ce5916a993dd400866808bc");
+            call =  theMovieDBAPI.getMovieResponse( "b85cf4603ce5916a993dd400866808bc");
             call.enqueue(new Callback<TheMovieDBResult>() {
                 @Override
                 public void onResponse(Response<TheMovieDBResult> response) {

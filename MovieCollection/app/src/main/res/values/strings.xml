@@ -18,12 +18,17 @@
     <string name="nevi_title_upcoming">Upcoming</string>
     <string name="nevi_title_nowplaying">Now Playing</string>
     <string name="nevi_title_favorite">Favorite</string>
-    <string name="popular">popularity.desc</string>
+    <!--<string name="popular">popularity.desc</string>
     <string name="toprated">vote_average.desc</string>
     <string name="upcoming">upcoming.desc</string>
-    <string name="nowplaying">Nowplaying.desc</string>
+    <string name="nowplaying">Nowplaying.desc</string>-->
+    <string name="popular">popular</string>
+    <string name="toprated">top_rated.desc</string>
+    <string name="upcoming">upcoming</string>
+    <string name="nowplaying">now_playing</string>
     <string name="favorite">Favorite</string>
     <string name="similar">Similar</string>
+    <string name="review_text">Review Not Avalible</string>
 
     <string name="closeDrawer">Navigation View</string>
     <string name="openDrawer">Navigation View Closed</string>
@@ -31,5 +36,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
+    <!-- Strings related to Widgets -->
+    <string name="title_widget_movie">Movie Collection</string>
 
 </resources>

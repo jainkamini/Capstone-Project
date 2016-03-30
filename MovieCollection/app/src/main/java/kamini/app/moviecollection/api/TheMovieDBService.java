@@ -19,8 +19,12 @@ public final class TheMovieDBService {
         public interface TheMovieDBAPI {
 
 
-            @GET("movie")
+           /* @GET("movie")
             Call<TheMovieDBResult> getMovieResponse(@Query("sort_by") String sortKey,
+                                                    @Query("api_key") String apiKey);*/
+
+            @GET("/")
+            Call<TheMovieDBResult> getMovieResponse(
                                                     @Query("api_key") String apiKey);
             @GET("similar")
             Call<TheMovieDBResult> getSimilarMovieResponse(
