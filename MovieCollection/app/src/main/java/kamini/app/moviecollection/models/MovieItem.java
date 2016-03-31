@@ -8,6 +8,10 @@ import java.util.List;
 public class MovieItem {
 
 
+
+
+
+
     /*"poster_path",
             "adult",
             "overview",

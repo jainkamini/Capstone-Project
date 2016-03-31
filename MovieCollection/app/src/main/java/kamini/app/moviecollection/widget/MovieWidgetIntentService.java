@@ -124,7 +124,7 @@ public class MovieWidgetIntentService extends IntentService {
             /*Intent launchIntent = new Intent(this, FetchService.class);
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, launchIntent, 0);
             views.setOnClickPendingIntent(R.id.btn_next, pendingIntent);*/
-
+            // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
 
 

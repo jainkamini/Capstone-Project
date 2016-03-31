@@ -296,7 +296,9 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
                 public void onResponse(Response<TheMovieDBResult> response) {
                     try {
                         TheMovieDBResult movieresult;
+
                         movieresult = response.body();
+
                         List<MovieItem> items;
                         items = movieresult.getresults();
                         // movieAdapter.swapList(items);
