@@ -23,9 +23,20 @@ public final class TheMovieDBService {
             Call<TheMovieDBResult> getMovieResponse(@Query("sort_by") String sortKey,
                                                     @Query("api_key") String apiKey);*/
 
-            @GET("/")
-            Call<TheMovieDBResult> getMovieResponse(
+         //   @GET("upcoming")
+            @GET("upcoming")
+            Call<TheMovieDBResult> getMovieUpcomingResponse(
                                                     @Query("api_key") String apiKey);
+            @GET("top_rated")
+            Call<TheMovieDBResult> getMovieTopratedResponse(
+                    @Query("api_key") String apiKey);
+            @GET("popular")
+            Call<TheMovieDBResult> getMoviePopularResponse(
+                    @Query("api_key") String apiKey);
+
+            @GET("now_playing")
+            Call<TheMovieDBResult> getMovieNowplayingResponse(
+                    @Query("api_key") String apiKey);
             @GET("similar")
             Call<TheMovieDBResult> getSimilarMovieResponse(
                                                     @Query("api_key") String apiKey);

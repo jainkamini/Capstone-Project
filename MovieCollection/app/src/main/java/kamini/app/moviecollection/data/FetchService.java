@@ -275,8 +275,9 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
         public void getMovieData(String movieSelectiontype)
         {
 
-            final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+movieSelectiontype+"/";
+           // final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+movieSelectiontype+"/";
 
+            final String API_BASE_URL = "http://api.themoviedb.org/3/movie/";
             TheMovieDBResult movieresult;
             List<MovieItem> items;
             MovieAdapter movieAdapter;
@@ -288,9 +289,24 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
                     .build();
             TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
-            //       call =  theMovieDBAPI.getMovieResponse( "vote_average.desc", "b85cf4603ce5916a993dd400866808bc");
-           // call =  theMovieDBAPI.getMovieResponse(movieSelectiontype, "b85cf4603ce5916a993dd400866808bc");
-            call =  theMovieDBAPI.getMovieResponse( "b85cf4603ce5916a993dd400866808bc");
+
+            if (movieSelectiontype.equals(this.getResources().getString(R.string.popular)) )
+
+            {
+                call =  theMovieDBAPI.getMoviePopularResponse("b85cf4603ce5916a993dd400866808bc");
+            }
+            else if (movieSelectiontype.equals(this.getResources().getString(R.string.toprated)) )
+            {call =  theMovieDBAPI.getMovieTopratedResponse( "b85cf4603ce5916a993dd400866808bc");
+
+
+            }
+            else if (movieSelectiontype.equals(this.getResources().getString(R.string.nowplaying)) ) {
+        call =  theMovieDBAPI.getMovieNowplayingResponse( "b85cf4603ce5916a993dd400866808bc");
+
+            }
+          else
+                call =  theMovieDBAPI.getMovieUpcomingResponse( "b85cf4603ce5916a993dd400866808bc");
+
             call.enqueue(new Callback<TheMovieDBResult>() {
                 @Override
                 public void onResponse(Response<TheMovieDBResult> response) {

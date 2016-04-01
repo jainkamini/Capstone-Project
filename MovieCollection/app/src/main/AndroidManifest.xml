@@ -44,6 +44,9 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="kamini.app.moviecollection.ACTION_DATA_UPDATED" />
+                <action android:name="kamini.app.moviecollection.ACTION_DATA_STARTED" />
+                <action android:name="kamini.app.moviecollection.EXTRA_MOVIEID" />
+                <action android:name="kamini.app.moviecollection.ACTION_TOAST" />
             </intent-filter>
 
             <meta-data
