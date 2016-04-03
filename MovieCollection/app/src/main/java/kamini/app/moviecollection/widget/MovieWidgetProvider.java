@@ -53,17 +53,7 @@ public class MovieWidgetProvider extends AppWidgetProvider {
     public static final int INDEX_MOVIE_BACKDROP = 3;
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-      // context.startService(new Intent(context, MovieWidgetIntentService.class));
 
-
-        /*ComponentName watchWidget;
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_movie);
-
-       watchWidget = new ComponentName(context, MovieWidgetProvider.class);
-
-        views.setOnClickPendingIntent(R.id.btn_next, getPendingSelfIntent(context, ACTION_DATA_UPDATED));
-        //getPendingSelfIntent(context, ACTION_DATA_STARTED);
-        appWidgetManager.updateAppWidget(watchWidget, views);*/
 
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_movie);
@@ -125,7 +115,7 @@ public class MovieWidgetProvider extends AppWidgetProvider {
             // Tell the AppWidgetManager to perform an update on the current app
             // widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-
+      //  pushWidgetUpdate(context, views);
 
         }
 
@@ -140,7 +130,7 @@ public class MovieWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        if (ACTION_TOAST.equals(intent.getAction())) {
+       if (ACTION_TOAST.equals(intent.getAction())) {
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
@@ -191,18 +181,20 @@ public class MovieWidgetProvider extends AppWidgetProvider {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.e(LOG_TAG,"widgetdata3:"+mMovieId);
+            Log.e(LOG_TAG, "widgetdata3:" + mMovieId);
+
 
             views.setTextViewText(R.id.txt_moviename, mMovieName);
             views.setTextViewText(R.id.txt_moviedate, mMoviedate);
+
             views.setOnClickPendingIntent(R.id.btn_next, getPendingSelfIntent(context, MovieWidgetProvider.ACTION_TOAST, MovieWidgetProvider.EXTRA_MOVIEID, mMovieId));
             appWidgetManager.updateAppWidget(watchWidget, views);
 
         }
 
     }
-    protected PendingIntent getPendingSelfIntent(Context context, String action,String extra,int mMovieid) {
-        Intent intent = new Intent(context, getClass());
+    public static PendingIntent getPendingSelfIntent(Context context, String action,String extra,int mMovieid) {
+        Intent intent = new Intent();
         intent.setAction(action);
         Bundle bundle = new Bundle();
         bundle.putInt(extra,
@@ -211,5 +203,19 @@ public class MovieWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
+   /* protected PendingIntent getPendingSelfIntent(Context context, String action,String extra,int mMovieid) {
+        Intent intent = new Intent(context, getClass());
+        intent.setAction(action);
+        Bundle bundle = new Bundle();
+        bundle.putInt(extra,
+                mMovieid);
+        intent.putExtras(bundle);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }*/
+   /* public static void pushWidgetUpdate(Context context, RemoteViews remoteViews) {
+        ComponentName myWidget = new ComponentName(context, MovieWidgetProvider.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        manager.updateAppWidget(myWidget, remoteViews);
+    }*/
 
 }

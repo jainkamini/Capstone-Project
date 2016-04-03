@@ -54,6 +54,16 @@
                 android:resource="@xml/widget_info_movie" />
         </receiver>-->
 
+
+        <receiver
+            android:name=".widget.WidgetReciver"
+            android:label="widgetBroadcastReceiver" >
+
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_movie" />
+        </receiver>
         <service
             android:name=".widget.MovieWidgetIntentService"
 

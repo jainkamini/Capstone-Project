@@ -8,9 +8,9 @@
     <color name="theme_accent">#04561A</color>
     <color name="ltgray">#ffe0e0e0</color>
 
-    <color name="primary">#673AB7</color>
-    <color name="accent">#7C4DFF</color>
-    <color name="primary_dark">#512DA8</color>
+    <color name="primary">#FF5722</color>
+    <color name="accent">#F4511E</color>
+    <color name="primary_dark">#E64A19</color>
     <color name="primary_light">#FFCDD3</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>

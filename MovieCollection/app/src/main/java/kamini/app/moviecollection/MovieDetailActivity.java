@@ -16,9 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-;
 import android.support.v4.content.Loader;
-
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -34,6 +32,8 @@ import android.widget.Toast;
 
 import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
+
+;
 
 
 public class MovieDetailActivity extends AppCompatActivity implements SimilarMovieFragment.Callback, LoaderManager.LoaderCallbacks<Cursor> {
@@ -93,12 +93,11 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(mMovieName);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+       // Log.e(LOG_TAG, "MovieDetailacivity id...:" + getIntent().getExtras().getLong("MovieId"));
+        /*final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        ab.setDisplayHomeAsUpEnabled(true);*/
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
@@ -127,12 +126,6 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
             // Being here means we are in animation mode
             //  supportPostponeEnterTransition();
         }
-       /* getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("Movie");*/
-        /*final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
-        ab.setDisplayHomeAsUpEnabled(true);*/
-
 
         /**
          * Instantiate a ViewPager and a PagerAdapter
@@ -168,7 +161,15 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
                 // Code goes here
             }
         });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(mMovieName);
+        Log.e(LOG_TAG, "Movie name for title" + mMovieName);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
@@ -431,6 +432,7 @@ if (id == R.id.action_play)
 
 mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
+            getSupportActionBar().setTitle(mMovieName);
         }
     }
 
