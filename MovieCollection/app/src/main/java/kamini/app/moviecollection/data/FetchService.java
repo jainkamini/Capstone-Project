@@ -69,26 +69,30 @@ public String movieSelection;
         {
             movieSelection=  bundle.getString(EXTRA_MOVIESELECTION);
             mMovieId=bundle.getString(EXTRA_MOVIE_ID);
-            getMovieGenreData();
+
             if (movieSelection.equals("Popular"))
             {
                 movieStatus="P";
+                getMovieGenreData();
                 getMovieData(this.getResources().getString(R.string.popular));
 
             }
             else if (movieSelection.equals("Toprated"))
             {
                 movieStatus="T";
+                getMovieGenreData();
                 getMovieData(this.getResources().getString(R.string.toprated));
             }
             else if (movieSelection.equals("Upcoming"))
             {
                 movieStatus="U";
+                getMovieGenreData();
                 getMovieData(this.getResources().getString(R.string.upcoming));
             }
             else if (movieSelection.equals("Nowplaying"))
             {
                 movieStatus="N";
+                getMovieGenreData();
                 getMovieData(this.getResources().getString(R.string.nowplaying));
             }
             else if (movieSelection.equals("Similar"))
@@ -331,31 +335,32 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
 
         }
 
-        public String getGenreName(List<Integer> genreid)
-        {
-            String mGenreName="";
-
+        public String getGenreName(List<Integer> genreid) {
+            String mGenreName = "";
 
 
             Cursor cursorgenre = getApplicationContext().getContentResolver().query(MovieContract.GenreEntry.CONTENT_URI, null,
                     null,
                     null, null);
-int listcount=genreid.size();
-        if (cursorgenre.getCount()!=0) {
-            for (int k = 0; k < cursorgenre.getCount(); k++) {
-                cursorgenre.moveToPosition(k);
-                for (int j = 0; j < genreid.size(); j++) {
+            int listcount = genreid.size();
+            if (cursorgenre.getCount() != 0) {
+                for (int k = 0; k < cursorgenre.getCount(); k++) {
+                    cursorgenre.moveToPosition(k);
+                    for (int j = 0; j < genreid.size(); j++) {
 
-                    if (genreid.get(j).equals(cursorgenre.getInt(1)))
-                    {
-                        mGenreName=cursorgenre.getString(2);
-                        mGenreName=mGenreName + "/";
+                        if (genreid.get(j).equals(cursorgenre.getInt(1))) {
+                            mGenreName = mGenreName + cursorgenre.getString(2);
+                            mGenreName = mGenreName + "/";
+                        }
                     }
                 }
             }
-        }
-
-            return mGenreName.replace(mGenreName.substring(mGenreName.length()-1)," ");
+            if (mGenreName.contains("/"))
+            {
+                return mGenreName.replace(mGenreName.substring(mGenreName.length() - 1), " ");
+            }
+            else
+                return mGenreName;
         }
         public void getMovieData(String movieSelectiontype)
         {

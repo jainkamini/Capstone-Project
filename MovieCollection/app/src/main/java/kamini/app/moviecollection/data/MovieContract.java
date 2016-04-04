@@ -26,6 +26,7 @@ public class MovieContract {
     public static final String PATH_MOVIE = "movie";
     public static final String PATH_TRAILER = "trailer";
     public static final String PATH_REVIEW = "review";
+    public static final String PATH_GENRE = "genre";
 
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieEntry implements BaseColumns {
@@ -169,7 +170,7 @@ public class MovieContract {
 
     public static final class GenreEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVIEW).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_GENRE).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;

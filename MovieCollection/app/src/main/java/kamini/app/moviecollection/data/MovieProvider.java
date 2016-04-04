@@ -151,7 +151,7 @@ public class MovieProvider extends ContentProvider {
 
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
-        matcher.addURI(authority,  MovieContract.PATH_REVIEW, GENRE);
+        matcher.addURI(authority,  MovieContract.PATH_GENRE, GENRE);
         matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*" , MOVIE_WITH_ID);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*/*" , MOVIETRAILER_WITH_ID);
@@ -192,7 +192,7 @@ public class MovieProvider extends ContentProvider {
             case REVIEW :
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
             case GENRE :
-                return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
+                return MovieContract.GenreEntry.CONTENT_ITEM_TYPE;
             case MOVIE_WITH_STATUS:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_WITH_ID:
