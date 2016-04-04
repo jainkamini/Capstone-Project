@@ -45,10 +45,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
       // MovieItem item = items.get(position);
         mCursor.moveToPosition(position);
-        holder.txttitle.setText(mCursor.getString(MovieLoader.Query.original_title));
+       // holder.txttitle.setText("Original Title : " + mCursor.getString(MovieLoader.Query.original_title). + mCursor.getString(MovieLoader.Query.release_date));
+        holder.txttitle.setText("Original Title : " + mCursor.getString(MovieLoader.Query.original_title));
         holder.txtname.setText(mCursor.getString(MovieLoader.Query.title));
-        holder.txtvotecount.setText(mCursor.getString(MovieLoader.Query.vote_count));
-        holder.txtdate.setText(mCursor.getString(MovieLoader.Query.release_date));
+        holder.txtvotecount.setText("Vote Count : "+mCursor.getString(MovieLoader.Query.vote_count));
+       holder.txtdate.setText("Release Date : "+mCursor.getString(MovieLoader.Query.release_date));
         holder.txtvoteavg.setText(mCursor.getString(MovieLoader.Query.vote_average));
 
         Log.e(MovieListActivityFragment.LOG_TAG, "Position Item :" + mCursor.getString(MovieLoader.Query.original_title));

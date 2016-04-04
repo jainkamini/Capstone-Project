@@ -53,6 +53,7 @@ private  String mReviewContent="Review";
             MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP_PATH,
             MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT,
             MovieContract.ReviewEntry.COLUMN_REVIEW_AUTHOR,
+            MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS,
 
     };
 
@@ -68,6 +69,7 @@ private  String mReviewContent="Review";
     public static final int COL_MOVIE_BACKDROP = 9;
     public static final int COL_MOVIE_REVIEWCONTENT = 10;
     public static final int COL_MOVIE_REVIEWAUTHOR = 11;
+    public static final int COL_MOVIE_GENRE = 12;
     public TextView txttitle;
     public TextView txtname;
     public TextView txtvotecount;
@@ -77,6 +79,7 @@ private  String mReviewContent="Review";
     public TextView txtvoteavg;
     public TextView txtoverview;
     public TextView txtreview;
+    public TextView txtgenre;
 
 
     // Store instance variables based on arguments passed
@@ -105,10 +108,13 @@ private  String mReviewContent="Review";
         txttitle= (TextView) view.findViewById(R.id.list_movie_title_textview);
         imgbackdrop=(ImageView)view.findViewById(R.id.list_backdrop_imageview);
         imgposter=(ImageView)view.findViewById(R.id.list_movieposter_imageview);
-        txtname=(TextView)view.findViewById(R.id.list_movie_name_textview);
         txtdate=(TextView)view.findViewById(R.id.list_movie_releasedate_textview);
+        txtgenre=(TextView)view.findViewById(R.id.list_movie_genere_textview);
         txtvoteavg=(TextView)view.findViewById(R.id.list_movierating_textview);
         txtvotecount=(TextView)view.findViewById(R.id.list_movie_votecount_textview);
+       /* txtname=(TextView)view.findViewById(R.id.list_movie_name_textview);
+
+        */
         txtoverview=(TextView)view.findViewById(R.id.list_overview_textview);
         txtreview=(TextView)view.findViewById(R.id.list_review_textview);
 
@@ -155,10 +161,14 @@ return null;
         {
            // Log.e(LOG_TAG, "cursorcount:" + data.getCount());
              txttitle.setText(data.getString(COL_MOVIE_TITLE));
-            txtname.setText(data.getString(COL_MOVIE_NAME));
+            txtgenre.setText(data.getString(COL_MOVIE_GENRE));
+            txtdate.setText(data.getString(COL_MOVIE_DATE));
+            txtvotecount.setText("("+data.getString(COL_MOVIE_VOTECOUNT)+")");
+            txtvoteavg.setText(data.getString(COL_MOVIE_RATING));
+            /*txtname.setText(data.getString(COL_MOVIE_NAME));
             txtvotecount.setText(data.getString(COL_MOVIE_VOTECOUNT));
             txtvoteavg.setText(data.getString(COL_MOVIE_RATING));
-            txtdate.setText(data.getString(COL_MOVIE_DATE));
+            txtdate.setText(data.getString(COL_MOVIE_DATE));*/
             txtoverview.setText(data.getString(COL_MOVIE_OVERVIEW));
 
             Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_BACKDROP)).into(imgbackdrop);

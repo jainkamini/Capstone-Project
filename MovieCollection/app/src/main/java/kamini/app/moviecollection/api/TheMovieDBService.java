@@ -1,5 +1,6 @@
 package kamini.app.moviecollection.api;
 
+import kamini.app.moviecollection.models.GenreResult;
 import kamini.app.moviecollection.models.MovieReviewResult;
 import kamini.app.moviecollection.models.MovieTrailerResult;
 import kamini.app.moviecollection.models.TheMovieDBResult;
@@ -40,6 +41,10 @@ public final class TheMovieDBService {
             @GET("similar")
             Call<TheMovieDBResult> getSimilarMovieResponse(
                                                     @Query("api_key") String apiKey);
+
+            @GET("genre/movie/list")
+            Call<GenreResult> getMovieGenreResponse(
+                    @Query("api_key") String apiKey);
 
             @GET("reviews")
             Call<MovieReviewResult> getMovieReviewResponse(

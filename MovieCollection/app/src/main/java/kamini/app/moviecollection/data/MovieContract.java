@@ -164,4 +164,27 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
+
+
+    public static final class GenreEntry implements BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVIEW).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEW;
+
+        // Table name
+        public static final String TABLE_NAME = "genre";
+
+
+        public static final String COLUMN_GENRE_ID = "genre_id";
+        public static final String COLUMN_GENRE_NAME = "genre_name";
+
+        public static Uri buildGenreUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
 }

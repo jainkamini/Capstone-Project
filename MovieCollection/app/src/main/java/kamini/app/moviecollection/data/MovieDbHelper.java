@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import kamini.app.moviecollection.data.MovieContract.MovieEntry;
-import kamini.app.moviecollection.data.MovieContract.TrailerEntry;
 import kamini.app.moviecollection.data.MovieContract.ReviewEntry;
+import kamini.app.moviecollection.data.MovieContract.TrailerEntry;
 
 
 /**
@@ -80,9 +80,28 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieEntry.TABLE_NAME + " (" + MovieEntry.COLUMN_MOVIE_ID + ") " +
 
                 ");";
+
+
+        final String SQL_CREATE_GENRE_TABLE = "CREATE TABLE " + MovieContract.GenreEntry.TABLE_NAME + " (" +
+                // Why AutoIncrement here, and not above?
+                // Unique keys will be auto-generated in either case.  But for weather
+                // forecasting, it's reasonable to assume the user will want information
+                // for a certain date and all dates *following*, so the forecast data
+                // should be sorted accordingly.
+                MovieContract.GenreEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+
+                // the ID of the location entry associated with this weather data
+                MovieContract.GenreEntry.COLUMN_GENRE_ID + " INTEGER NOT NULL, " +
+                MovieContract.GenreEntry.COLUMN_GENRE_NAME + " TEXT NOT NULL " +
+
+                " );";
+
+
+
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_TRAILER_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_REVIEW_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_GENRE_TABLE);
 
     }
     @Override
@@ -96,6 +115,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TrailerEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ReviewEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.GenreEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 

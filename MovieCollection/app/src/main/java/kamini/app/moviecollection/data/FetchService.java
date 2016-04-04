@@ -16,6 +16,8 @@ import java.util.Vector;
 import kamini.app.moviecollection.MovieAdapter;
 import kamini.app.moviecollection.R;
 import kamini.app.moviecollection.api.TheMovieDBService;
+import kamini.app.moviecollection.models.GenreItem;
+import kamini.app.moviecollection.models.GenreResult;
 import kamini.app.moviecollection.models.MovieItem;
 import kamini.app.moviecollection.models.MovieReviewItem;
 import kamini.app.moviecollection.models.MovieReviewResult;
@@ -55,6 +57,7 @@ public String movieSelection;
         Call<TheMovieDBResult> call;
         Call<MovieReviewResult> callReview;
         Call<MovieTrailerResult> callTrailer;
+        Call<GenreResult> callGenre;
     public FetchService() {
         super(TAG);
     }
@@ -66,6 +69,7 @@ public String movieSelection;
         {
             movieSelection=  bundle.getString(EXTRA_MOVIESELECTION);
             mMovieId=bundle.getString(EXTRA_MOVIE_ID);
+            getMovieGenreData();
             if (movieSelection.equals("Popular"))
             {
                 movieStatus="P";
@@ -272,6 +276,87 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
 
 
         }
+
+        public void getMovieGenreData()
+        {
+
+            //final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+mMovieId+"/similar/";
+            final String API_BASE_URL = "  http://api.themoviedb.org/3/";
+
+            GenreResult movieresult;
+            List<GenreResult> items;
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
+
+
+            callGenre =  theMovieDBAPI.getMovieGenreResponse("b85cf4603ce5916a993dd400866808bc");
+            callGenre.enqueue(new Callback<GenreResult>() {
+                @Override
+                public void onResponse(Response<GenreResult> response) {
+                    try {
+                        GenreResult movieresult;
+                        movieresult = response.body();
+                        List<GenreItem> items;
+                        items = movieresult.getresults();
+                        // movieAdapter.swapList(items);
+                        InsertGenreData(items);
+
+                        Log.e(LOG_TAG, "url:" + movieresult);
+                        Log.e(LOG_TAG, "response = " + new Gson().toJson(movieresult));
+
+                    } catch (NullPointerException e) {
+                        Toast toast = null;
+                        if (response.code() == 401) {
+                            toast = Toast.makeText(getApplication(), "Unauthenticated", Toast.LENGTH_SHORT);
+                        } else if (response.code() >= 400) {
+                            toast = Toast.makeText(getApplication(), "Client Error " + response.code()
+                                    + " " + response.message(), Toast.LENGTH_SHORT);
+                        }
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e("getMovie threw: ", t.getMessage());
+                }
+            });
+
+
+        }
+
+        public String getGenreName(List<Integer> genreid)
+        {
+            String mGenreName="";
+
+
+
+            Cursor cursorgenre = getApplicationContext().getContentResolver().query(MovieContract.GenreEntry.CONTENT_URI, null,
+                    null,
+                    null, null);
+int listcount=genreid.size();
+        if (cursorgenre.getCount()!=0) {
+            for (int k = 0; k < cursorgenre.getCount(); k++) {
+                cursorgenre.moveToPosition(k);
+                for (int j = 0; j < genreid.size(); j++) {
+
+                    if (genreid.get(j).equals(cursorgenre.getInt(1)))
+                    {
+                        mGenreName=cursorgenre.getString(2);
+                        mGenreName=mGenreName + "/";
+                    }
+                }
+            }
+        }
+
+            return mGenreName.replace(mGenreName.substring(mGenreName.length()-1)," ");
+        }
         public void getMovieData(String movieSelectiontype)
         {
 
@@ -392,12 +477,16 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
 
                     movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_RATING, items.get(i).getVote_average());
                     movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTECOUNT, items.get(i).getVote_count());
-                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS, items.get(i).getGenreIds().toString());
+                 String mGenreName=   getGenreName(items.get(i).getGenreIds());
+
+                   // movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS, items.get(i).getGenreIds().toString());
+                    movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_GENREIDS, mGenreName);
                     movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_STATUS, movieStatus);
                     movie_value.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS, 0);
                     values.add(movie_value);
 
                     Log.d(LOG_TAG, "Movie Name. " + items.get(i).getTitle());
+                    Log.d(LOG_TAG, "Genre List. " + items.get(i).getGenreIds().toString());
                 }
             }
                 if (values.size() > 0) {
@@ -410,6 +499,43 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
 
             }
         }
+        public void InsertGenreData(List<GenreItem> items)
+        {
+
+
+
+            int i;
+            // Context mContext;
+            Vector<ContentValues> values = new Vector <ContentValues> (items.size());
+// delete old movie type which is not favorite so we don't build up an endless history
+
+            getApplicationContext().getContentResolver().delete(MovieContract.GenreEntry.CONTENT_URI,
+                   null  ,
+                    null);
+
+            for (i=0 ;i<items.size(); i++) {
+                ContentValues movie_value = new ContentValues();
+                movie_value.put(MovieContract.GenreEntry.COLUMN_GENRE_ID, items.get(i).getId());
+                movie_value.put(MovieContract.GenreEntry.COLUMN_GENRE_NAME, items.get(i).getName());
+
+
+                values.add(movie_value);
+
+
+            }
+
+            if (values.size() > 0) {
+
+                ContentValues[] cvValue = new ContentValues[values.size()];
+                values.toArray(cvValue);
+                getApplicationContext().getContentResolver().bulkInsert(
+                        MovieContract.GenreEntry.CONTENT_URI,cvValue);
+               // Log.d(LOG_TAG, "Sync Review Complete. " + values.size() + " Inserted");
+            }
+        }
+
+
+
         public void InsertReviewData(List<MovieReviewItem> items)
         {
 
@@ -430,10 +556,10 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
                 if(items.get(i).getAuthor()==null) {
                     movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT, items.get(i).getContent().replace("\r\n","  "));
                 }
-                    else
+                else
 
                     movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT, items.get(i).getContent().replace("\r\n","  ")+" -------- "
-                    +items.get(i).getAuthor());
+                            +items.get(i).getAuthor());
 
                 movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, items.get(i).getId());
                 movie_value.put(MovieContract.ReviewEntry.COLUMN_REVIEW_URL, items.get(i).getUrl());

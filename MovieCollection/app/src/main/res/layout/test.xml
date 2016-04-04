@@ -1,41 +1,45 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:id="@+id/list_movie_cardview"
+    android:id="@+id/list_movie_cardviewDetail"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
+    android:orientation="vertical"
     android:foreground="?selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
 
-
-        <ImageView
-            android:id="@+id/list_movie_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:background="@drawable/ytlogo"
-            android:scaleType="centerCrop"
-            />
-
-
-
+            <ImageView
+                android:id="@+id/list_movieposter_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+android:background="@drawable/ytlogo"
+                />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
-                android:id="@+id/list_movie_name_textview"
+                android:id="@+id/list_movie_name_heading"
                 style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,96 +47,117 @@
                 android:paddingTop="16dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="4dp"
-android:text="hhhkadhasjdhkjsahdkhkdhkahdkhaskdhkashdkhsakdhkas"
+                android:textColor="@color/secondary_text"
+                android:text="Original Title"
                 android:ellipsize="end"
                 android:maxLines="1" />
-            <LinearLayout
-                android:layout_width="wrap_content"
+
+
+            <TextView
+                android:id="@+id/list_movie_title_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
 
-                <TextView
-                    android:id="@+id/list_movie_title_heading"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="Original Title :"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
-                <TextView
-                    android:id="@+id/list_movie_title_textview"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="hhhkadhasjdhkjsahdkhkdhkahdkhaskdhkashdkhsakdhkas"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
-                <TextView
-                    android:id="@+id/list_movie_releasedate_textview"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="2620-10-21"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_genere_heading"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textColor="@color/secondary_text"
+                android:paddingBottom="16dp"
+                android:text="Genre "
 
-                <TextView
-                    android:id="@+id/list_movie_title_votecount"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="Vote Count: "
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_genere_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
 
-                <TextView
-                    android:id="@+id/list_movierating_textview"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="2013"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
-                <TextView
-                    android:id="@+id/list_movie_votecount_textview"
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="8"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
-            </LinearLayout>
+
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_releasedate_heading"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/secondary_text"
+                android:text="Release Date "
+
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_releasedate_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+
+
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_status_heading"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:text="status "
+                android:textColor="@color/secondary_text"
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/list_movie_status_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+
+
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/list_movie_votecount_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+
+
+                android:ellipsize="end" />
+
+
+            <TextView
+                android:id="@+id/list_movierating_textview"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+
+
+                android:ellipsize="end" />
+
         </LinearLayout>
     </LinearLayout>
-
 </android.support.v7.widget.CardView>

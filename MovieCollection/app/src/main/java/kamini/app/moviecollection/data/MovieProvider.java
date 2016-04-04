@@ -27,6 +27,7 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_WITH_ID = 105;
     static final int MOVIETRAILER_WITH_ID = 106;
     static final int MOVIE_WITH_FAVORITESTATUS = 107;
+    static final int GENRE = 108;
 
     private static final SQLiteQueryBuilder sMovieQueryBuilder =
             new SQLiteQueryBuilder();
@@ -34,6 +35,7 @@ public class MovieProvider extends ContentProvider {
             new SQLiteQueryBuilder();
     private static final String MOVIE_BY_STATUS = MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?";
     private static final String MOVIE_BY_FAVORITESTATUS = MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = ?";
+    private static final String GENERE_ID = MovieContract.GenreEntry.COLUMN_GENRE_ID + " in  ?";
    // private static final String MOVIE_BY_ID = MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?";
 
 
@@ -149,6 +151,7 @@ public class MovieProvider extends ContentProvider {
 
         matcher.addURI(authority,  MovieContract.PATH_TRAILER, TRAILAR);
         matcher.addURI(authority,  MovieContract.PATH_REVIEW, REVIEW);
+        matcher.addURI(authority,  MovieContract.PATH_REVIEW, GENRE);
         matcher.addURI(authority,MovieContract.PATH_MOVIE , MOVIE_WITH_STATUS);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*" , MOVIE_WITH_ID);
         matcher.addURI(authority,MovieContract.PATH_MOVIE + "/*/*" , MOVIETRAILER_WITH_ID);
@@ -188,6 +191,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.TrailerEntry.CONTENT_ITEM_TYPE;
             case REVIEW :
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
+            case GENRE :
+                return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
             case MOVIE_WITH_STATUS:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
             case MOVIE_WITH_ID:
@@ -220,6 +225,14 @@ public class MovieProvider extends ContentProvider {
                 long _id = db.insert(MovieContract.TrailerEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = MovieContract.TrailerEntry.buildTrailerUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case GENRE: {
+                long _id = db.insert(MovieContract.GenreEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = MovieContract.GenreEntry.buildGenreUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -272,6 +285,10 @@ public class MovieProvider extends ContentProvider {
             case TRAILAR:
                 rowsDeleted = db.delete(
                         MovieContract.TrailerEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case GENRE:
+                rowsDeleted = db.delete(
+                        MovieContract.GenreEntry.TABLE_NAME, null, null);
                 break;
             case REVIEW:
                 rowsDeleted = db.delete(
@@ -468,6 +485,23 @@ public class MovieProvider extends ContentProvider {
 
 
             }
+
+
+            case GENRE: {
+                // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.GenreEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+
+                break;
+
+
+            }
             case REVIEW: {
                 // moviequeryBuilder.appendWhere(MovieContract.MovieEntry._ID + "=" + uri.getPathSegments().get(1));
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -558,6 +592,25 @@ public class MovieProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insertWithOnConflict(MovieContract.ReviewEntry.TABLE_NAME, null, value,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        if (_id != -1) {
+                            returncount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returncount;
+            }
+
+            case GENRE: {
+                db.beginTransaction();
+                int returncount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insertWithOnConflict(MovieContract.GenreEntry.TABLE_NAME, null, value,
                                 SQLiteDatabase.CONFLICT_REPLACE);
                         if (_id != -1) {
                             returncount++;

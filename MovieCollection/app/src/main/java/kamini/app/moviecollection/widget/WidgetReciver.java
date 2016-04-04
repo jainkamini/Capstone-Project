@@ -95,7 +95,7 @@ public class WidgetReciver extends BroadcastReceiver  {
             views.setTextViewText(R.id.txt_moviedate, mMoviedate);
 
             views.setOnClickPendingIntent(R.id.btn_next, MovieWidgetProvider. getPendingSelfIntent(context, MovieWidgetProvider.ACTION_TOAST, MovieWidgetProvider.EXTRA_MOVIEID, mMovieId));
-           MovieWidgetProvider.pushWidgetUpdate(context ,views);
+         //  MovieWidgetProvider.pushWidgetUpdate(context ,views);
         }
     }
 }
