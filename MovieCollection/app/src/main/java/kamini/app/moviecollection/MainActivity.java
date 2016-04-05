@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 
 public class MainActivity extends AppCompatActivity implements MovieListActivityFragment.Callback{
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         setSupportActionBar(toolbar);
 
         //Initializing NavigationView
+
+
+
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setFragment("Upcoming","U");
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
@@ -110,6 +117,30 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         actionBarDrawerToggle.syncState();
 
 
+        if (findViewById(R.id.movie_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                       .replace(R.id.movie_detail_container, new MovieDetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+
+
+
+            }
+        } else {
+            mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
+
+
+        }
+
+
     }
 
     public  void setFragment( String movieType,String movieStatus)
@@ -120,40 +151,33 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         bundle.putString("movieselection", movieType);
         bundle.putString("moviestatus", movieStatus );
         fragment.setArguments(bundle);
-        frTransaction.replace(R.id.frame, fragment);
+        frTransaction.replace(R.id.fragment_fetchmovie, fragment);
         frTransaction.commit();
     }
 
 
     @Override
     public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
-        Intent intent = new Intent(this, MovieDetailActivity.class)
-        .setData(contentUri);
-                intent.putExtra("MovieId", mMovieId);
-        startActivity(intent);
-        Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
-       /* if (mTwoPane) {
+
+        if (mTwoPane) {
             Bundle args = new Bundle();
-            if (value != null) {
-                args.putParcelable("Serie", value);
-            }
-            DetailSerieFragment fragment = new DetailSerieFragment();
+            args.putParcelable(MovieDetailFragment.DETAIL_URI, contentUri);
+
+            args.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID),mMovieId);
+            MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                    .addSharedElement(imageView, getResources().getString(R.string.transition_photo))
-                    .replace(R.id.fragment_detail_serie, fragment, DETAILFRAGMENT_TAG)
+                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
-            Intent intent = new Intent(this, DetailSerieSearchedActivity.class);
-            intent.putExtra("Serie", value);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.transition_photo));
-                startActivity(intent, options.toBundle());
-            } else {
-                startActivity(intent);
-            }
+            Intent intent = new Intent(this, MovieDetailActivity.class)
+                    .setData(contentUri);
+            intent.putExtra("MovieId", mMovieId);
+            startActivity(intent);
+            Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
 
-        }*/
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

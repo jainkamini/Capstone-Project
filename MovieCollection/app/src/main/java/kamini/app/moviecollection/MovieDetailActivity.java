@@ -175,7 +175,8 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         tabLayout.setupWithViewPager(mviewPager);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        mFavoriteStatus=checkFavorite();
+            mFavoriteStatus = checkFavorite();
+
         if (mFavoriteStatus==1)
         {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
@@ -219,6 +220,26 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
     }
 
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // outState.putParcelable("MovieKey", extras);
+        outState.putParcelable(MovieDetailFragment.DETAIL_URI, mUri);
+        outState.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), mMovieId);
+
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //  extras=  savedInstanceState.getParcelable("MovieKey");
+        mUri=savedInstanceState.getParcelable(MovieDetailFragment.DETAIL_URI);
+        mMovieId=savedInstanceState.getLong(String.valueOf(MovieDetailFragment.MOVIE_ID));
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
     private int saveFavorite() {
         ContentValues movieValues = new ContentValues();
         if (mFavoriteStatus == 0)
@@ -251,6 +272,7 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
     }
 
     private int checkFavorite() {
+
         Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(mMovieId), null,
                 MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + mMovieId +
                         " AND " +

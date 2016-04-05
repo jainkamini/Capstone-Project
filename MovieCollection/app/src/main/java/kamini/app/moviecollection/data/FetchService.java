@@ -357,7 +357,8 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             }
             if (mGenreName.contains("/"))
             {
-                return mGenreName.replace(mGenreName.substring(mGenreName.length() - 1), " ");
+                return mGenreName;
+               // return mGenreName.replace(mGenreName.substring(mGenreName.length() - 1), " ");
             }
             else
                 return mGenreName;

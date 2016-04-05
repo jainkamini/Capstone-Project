@@ -20,6 +20,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
@@ -84,6 +87,10 @@ public class MovieListActivityFragment extends Fragment implements
             }
         });
 
+        //Add Banner Ad
+        AdView mAdView = (AdView)rootView. findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         //   movieAdapter = new MovieAdapter(items);
         mEmptyView = (TextView) rootView.findViewById(R.id.recycler_view_empty);
