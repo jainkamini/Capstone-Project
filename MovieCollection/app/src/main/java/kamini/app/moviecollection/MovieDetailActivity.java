@@ -30,6 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
@@ -188,6 +191,16 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Get the tracker
+                Tracker tracker = ((MyApplication) getApplication()).getTracker();
+
+// Send the hit
+                tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Favorite Movie")
+                        .setAction("Did thing")
+                        .setLabel(mMovieName)
+                        .build());
                 saveFavorite();
 
 
