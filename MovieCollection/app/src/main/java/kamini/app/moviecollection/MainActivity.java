@@ -16,9 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 
 public class MainActivity extends AppCompatActivity implements MovieListActivityFragment.Callback{
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -29,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
     private DrawerLayout drawerLayout;
     private boolean mTwoPane;
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    //trackid  UA-76024303-1
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
         //Initializing NavigationView
 
+        ((MyApplication)getApplication()).startTracking();
 
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -200,4 +199,9 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Created by Kamini on 4/5/2016.
+     */
+
 }

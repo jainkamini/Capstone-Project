@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ga_trackingId">UA-76024303-1</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <screenName name="kamini.app.moviecollection.MainActivity">
+        Main screen
+    </screenName>
+    <screenName name="kamini.app.moviecollection.MovieListActivityFragment">
+        Movie Screen
+    </screenName>
+    <screenName name="kamini.app.moviecollection.MovieDetailFragment">
+        Detail Screen
+    </screenName>
+    <screenName name="kamini.app.moviecollection.SimilarMovieFragment">
+        Movie Similar Screen
+    </screenName>
+</resources>
