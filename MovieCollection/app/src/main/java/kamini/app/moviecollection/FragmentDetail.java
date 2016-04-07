@@ -117,13 +117,7 @@ public class FragmentDetail extends Fragment implements SimilarMovieFragment.Cal
          * Instantiate a ViewPager and a PagerAdapter
          */
         mviewPager = (ViewPager) rootView. findViewById(R.id.view_pager);
-        // if (viewPager != null) {
-        // setupViewPager(mviewPager);
-        // }
-        //  getLoaderManager().initLoader(0, null, getBaseContext());
 
-//        adapterViewPager = new MyPagerAdapter(getFragmentManager());
-//        mviewPager.setAdapter(adapterViewPager);
         mviewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
         // adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         // vpPager.setAdapter(adapterViewPager);
@@ -448,7 +442,7 @@ if (mUri !=null && mMovieId !=null) {
                 frTransaction.add(R.id.movie_container, fragment);
                     frTransaction.addToBackStack(null);
                 frTransaction.commit();*/
-                    return MovieDetailFragment.newInstance(arguments);
+                   return MovieDetailFragment.newInstance(arguments);
 
                 case 1: // Fragment # 0 - This will show FirstFragment different title
                    /*SimilarMovieFragment similarMovieFragment = new SimilarMovieFragment();
@@ -461,6 +455,11 @@ if (mUri !=null && mMovieId !=null) {
                     frTransactionsimilar.add(R.id.similarmovie_container, fragmentsimilar);
                     frTransactionsimilar.addToBackStack(null);
                     frTransactionsimilar.commit();*/
+                    if (mUri !=null && mMovieId !=null) {
+                        arguments.putParcelable(SimilarMovieFragment.DETAIL_URI, mUri);
+                        arguments.putLong(String.valueOf(SimilarMovieFragment.MOVIE_ID), mMovieId);
+                    }
+
                     return SimilarMovieFragment.newInstance(arguments);
 
                 default:

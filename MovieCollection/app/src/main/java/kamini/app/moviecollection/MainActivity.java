@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
                         .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
                         .commit();
 
-                getSupportFragmentManager().beginTransaction()
-                       .replace(R.id.movie_detail_container, new MovieDetailFragment(), DETAILFRAGMENT_TAG)
-                        .commit();
+
 
 
 
@@ -100,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
 
         if (mTwoPane) {
             Bundle args = new Bundle();
-            args.putParcelable(MovieDetailFragment.DETAIL_URI, contentUri);
+            args.putParcelable(FragmentDetail.DETAIL_URI, contentUri);
 
             args.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID),mMovieId);
-            MovieDetailFragment fragment = new MovieDetailFragment();
+            FragmentDetail fragment = new FragmentDetail();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
