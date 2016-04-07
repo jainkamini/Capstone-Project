@@ -83,6 +83,12 @@ private  String mReviewContent="Review";
 
 
     // Store instance variables based on arguments passed
+
+    public static MovieDetailFragment newInstance(Bundle args) {
+        MovieDetailFragment fragment = new MovieDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

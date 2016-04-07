@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements MovieListActivityFragment.Callback{
@@ -32,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,78 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         ((MyApplication)getApplication()).startTracking();
 
 
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        setFragment("Upcoming","U");
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
-            // This method will trigger on item Click of navigation menu
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-
-                //Closing drawer on item click
-                drawerLayout.closeDrawers();
-
-                //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()) {
-
-
-
-
-                    case R.id.poular:
-
-
-                       setFragment("Popular","P");
-                        return true;
-                    case R.id.toprated:
-                        setFragment("Toprated","T");
-                        return true;
-                    case R.id.upcoming:
-                        setFragment("Upcoming","U");
-                        return true;
-                    case R.id.nowplaying:
-                        setFragment("Nowplaying","N");
-                        return true;
-                    case R.id.favorite:
-                        setFragment("Favorite","F");
-                        return true;
-
-                    default:
-                        Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
-                        return true;
-
-                }
-            }
-        });
-
-        // Initializing Drawer Layout and ActionBarToggle
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        //Setting the actionbarToggle to drawer layout
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        //calling sync state is necessay or else your hamburger icon wont show up
-        actionBarDrawerToggle.syncState();
 
 
         if (findViewById(R.id.movie_detail_container) != null) {
@@ -124,7 +50,20 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
+
+
             if (savedInstanceState == null) {
+
+                FragmentDetail fragment = new FragmentDetail();
+                if (contentUri != null) {
+                    Bundle args = new Bundle();
+                    args.putParcelable(FragmentDetail.DETAIL_URI, contentUri);
+                    fragment.setArguments(args);
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+                        .commit();
+
                 getSupportFragmentManager().beginTransaction()
                        .replace(R.id.movie_detail_container, new MovieDetailFragment(), DETAILFRAGMENT_TAG)
                         .commit();
@@ -146,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
     {
         MovieListActivityFragment fragment = new MovieListActivityFragment();
         FragmentTransaction frTransaction = getSupportFragmentManager().beginTransaction();
+
         Bundle bundle = new Bundle();
         bundle.putString("movieselection", movieType);
         bundle.putString("moviestatus", movieStatus );
