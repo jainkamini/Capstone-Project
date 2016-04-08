@@ -446,11 +446,12 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             /*getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
                     MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = ?"  ,
                     new String[]{ movieStatus});*/
+            getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.buildMovieUri(0),
+                    MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = "+"'" + movieStatus + "'"+" AND " +
+                            MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,null);
             for (i=0 ;i<items.size();i++) {
 
-                getApplicationContext().getContentResolver().delete(MovieContract.MovieEntry.buildMovieUri(items.get(i).getId()),
-                        MovieContract.MovieEntry.COLUMN_MOVIE_STATUS + " = "+"'" + movieStatus + "'"+" AND " +
-                                MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS + " = " + 0,null);
+
 
                 Cursor cursor = getApplicationContext().getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(items.get(i).getId()), null,
                         MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + items.get(i).getId() +

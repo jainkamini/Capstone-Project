@@ -49,7 +49,7 @@ public class SimilarMovieFragment extends Fragment    implements
     private String movieStatus;
     private static final int DETAIL_LOADER = 0;
 
-
+    Callback mCallback;
     public SimilarMovieFragment() {
     }
     public static SimilarMovieFragment newInstance(Bundle args) {
@@ -182,8 +182,26 @@ public class SimilarMovieFragment extends Fragment    implements
     }
 
 
+    /*@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (Callback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnClickHeadlineSelectedListener");
+        }
+    }
 
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        this.mCallback = null;
+    }*/
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         //  movieAdapter=new MovieAdapter(getActivity(),MovieAdapter.MovieAdapterOnClickHandler()

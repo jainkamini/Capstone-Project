@@ -28,11 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import kamini.app.moviecollection.data.FetchService;
 import kamini.app.moviecollection.data.MovieContract;
 
 
-public class FragmentDetail extends Fragment implements SimilarMovieFragment.Callback, android.support.v4.app. LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentDetail extends Fragment implements  android.support.v4.app. LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = FragmentDetail.class.getSimpleName();
     FragmentPagerAdapter adapterViewPager;
@@ -172,7 +175,7 @@ if (mMovieId != null) {
             public void onClick(View view) {
 
                 // Get the tracker
-             /*  Tracker tracker = ((MyApplication)getApplication()).getTracker();
+               Tracker tracker = ((MyApplication)getActivity().getApplication()).getTracker();
 
 // Send the hit
                 tracker.send(new HitBuilders.EventBuilder()
@@ -180,7 +183,7 @@ if (mMovieId != null) {
                         .setAction("Did thing")
                         .setLabel(mMovieName)
                         .build());
-                saveFavorite();*/
+                saveFavorite();
 
 
 
@@ -299,6 +302,23 @@ if (mMovieId != null) {
     };
 
 
+   /* private void finishCreatingMenu(Menu menu) {
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        menuItem.setIntent(createShareForecastIntent());
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        *//*if (getActivity() instanceof MovieDetailActivity) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            inflater.inflate(R.menu.menu_detail, menu);
+            finishCreatingMenu(menu);
+        }*//*
+       menu.clear();
+        inflater.inflate(R.menu.menu_detail, menu);
+        finishCreatingMenu(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }*/
     private void finishCreatingMenu(Menu menu) {
         // Retrieve the share menu item
         MenuItem menuItem = menu.findItem(R.id.action_share);
@@ -311,8 +331,14 @@ if (mMovieId != null) {
             // Inflate the menu; this adds items to the action bar if it is present.
             inflater.inflate(R.menu.menu_detail, menu);
             finishCreatingMenu(menu);
+
+
         }
     }
+
+
+
+
     private Intent createShareForecastIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -329,49 +355,19 @@ if (mMovieId != null) {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-
+        if (id == R.id.action_share) {
+            return true;
+        }
         if (id == R.id.action_play)
         {
-            // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movieTrailer.getmTrailerKey())));
-            //N7gDl9HRsY4
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + mShareTrailerKey)));
+
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" +mShareTrailerKey)));
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    @Override
-    public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
-        Intent intent = new Intent(this.getActivity(), FragmentDetail.class)
-                .setData(contentUri);
-        intent.putExtra("MovieId", mMovieId);
-        startActivity(intent);
-        Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
-       /* if (mTwoPane) {
-            Bundle args = new Bundle();
-            if (value != null) {
-                args.putParcelable("Serie", value);
-            }
-            DetailSerieFragment fragment = new DetailSerieFragment();
-            fragment.setArguments(args);
-            getSupportFragmentManager().beginTransaction()
-                    .addSharedElement(imageView, getResources().getString(R.string.transition_photo))
-                    .replace(R.id.fragment_detail_serie, fragment, DETAILFRAGMENT_TAG)
-                    .commit();
-        } else {
-            Intent intent = new Intent(this, DetailSerieSearchedActivity.class);
-            intent.putExtra("Serie", value);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, imageView, getResources().getString(R.string.transition_photo));
-                startActivity(intent, options.toBundle());
-            } else {
-                startActivity(intent);
-            }
-
-        }*/
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
