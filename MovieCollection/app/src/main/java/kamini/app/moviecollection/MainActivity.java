@@ -10,8 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity implements Callback{
@@ -31,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements Callback{
         setContentView(R.layout.activity_main);
         Uri contentUri = getIntent() != null ? getIntent().getData() : null;
         // Initializing Toolbar and setting it as the actionbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
 
         //Initializing NavigationView
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements Callback{
             }
         } else {
             mTwoPane = false;
-            getSupportActionBar().setElevation(0f);
+         //   getSupportActionBar().setElevation(0f);
 
 
         }
@@ -116,14 +114,16 @@ public class MainActivity extends AppCompatActivity implements Callback{
 
         }
     }
-    @Override
+
+
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_movie_list, menu);
         return true;
-    }
+    }*/
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements Callback{
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /**
      * Created by Kamini on 4/5/2016.

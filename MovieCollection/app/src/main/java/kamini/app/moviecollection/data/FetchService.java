@@ -95,20 +95,21 @@ public String movieSelection;
                 getMovieGenreData();
                 getMovieData(this.getResources().getString(R.string.nowplaying));
             }
-            else if (movieSelection.equals("Similar"))
-            {
-                movieStatus="S";
-
-                getSimilarMovieData(this.getResources().getString(R.string.similar));
-                Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
+            else if (movieSelection.equals("Similar")) {
+                movieStatus = "S";
+                if (mMovieId != null) {
+                    getSimilarMovieData(this.getResources().getString(R.string.similar));
+                    Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
+                }
             }
-
             else if (movieSelection.equals("Detail"))
             {
+                if (mMovieId != null) {
 
-               getMovieReviewData();
-                getMovieTrailerData();
-                Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
+                    getMovieReviewData();
+                    getMovieTrailerData();
+                    Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
+                }
             }
             Log.d(LOG_TAG, "Movie Selection. " +movieSelection);
         }

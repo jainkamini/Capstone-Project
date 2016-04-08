@@ -115,7 +115,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
+        
         /**
          * Instantiate a ViewPager and a PagerAdapter
          */
@@ -146,12 +146,8 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
                 // Code goes here
             }
         });
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
 
-        ((AppCompatActivity) getActivity()).  setSupportActionBar(toolbar);
 
-        ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-     //   ((AppCompatActivity) getActivity()).setDisplayShowTitleEnabled(true);
         ((AppCompatActivity) getActivity()).setTitle(mMovieName);
         Log.e(LOG_TAG, "Movie name for title" + mMovieName);
      //   ((AppCompatActivity) getActivity()).setDisplayShowHomeEnabled(true);*/
@@ -325,15 +321,18 @@ if (mMovieId != null) {
         menuItem.setIntent(createShareForecastIntent());
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
         if ( getActivity() instanceof MovieDetailActivity ){
             // Inflate the menu; this adds items to the action bar if it is present.
             inflater.inflate(R.menu.menu_detail, menu);
             finishCreatingMenu(menu);
-
-
         }
+
+
     }
 
 
@@ -390,7 +389,8 @@ if (mMovieId != null) {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
 
         if (data != null && data.moveToFirst() )
         {
@@ -398,6 +398,10 @@ if (mMovieId != null) {
             mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
             ((AppCompatActivity) getActivity()).   getSupportActionBar().setTitle(mMovieName);
+            Menu menu = toolbarView.getMenu();
+            if (null != menu ) menu.clear();
+            toolbarView.inflateMenu(R.menu.menu_detail);
+            finishCreatingMenu(toolbarView.getMenu());
         }
     }
 
