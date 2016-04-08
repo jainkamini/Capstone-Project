@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity implements MovieListActivityFragment.Callback{
+public class MainActivity extends AppCompatActivity implements Callback{
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     //Defining Variables
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MovieListActivity
         frTransaction.commit();
     }
 
-
+//when click on item on main list or similarmovie  this call back event occour
     @Override
     public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
 

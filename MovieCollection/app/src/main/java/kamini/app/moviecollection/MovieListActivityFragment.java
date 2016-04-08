@@ -54,13 +54,7 @@ public class MovieListActivityFragment extends Fragment implements
      * implement. This mechanism allows activities to be notified of item
      * selections.
      */
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        public void onItemSelected(Uri MovieUri,Long mMovieId, MovieAdapter.ViewHolder vh);
 
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

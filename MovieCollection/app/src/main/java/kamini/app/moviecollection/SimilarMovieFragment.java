@@ -49,7 +49,7 @@ public class SimilarMovieFragment extends Fragment    implements
     private String movieStatus;
     private static final int DETAIL_LOADER = 0;
 
-    Callback mCallback;
+
     public SimilarMovieFragment() {
     }
     public static SimilarMovieFragment newInstance(Bundle args) {
@@ -63,14 +63,7 @@ public class SimilarMovieFragment extends Fragment    implements
      * implement. This mechanism allows activities to be notified of item
      * selections.
      */
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        public void onItemSelected(Uri MovieUri,Long mMovieId, MovieAdapter.ViewHolder vh);
 
-        void onCreateOptionsMenu(Menu menu, MenuInflater inflater);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -211,7 +204,7 @@ public class SimilarMovieFragment extends Fragment    implements
             @Override
             public void onClick(Long movieId, MovieAdapter.ViewHolder vh) {
                 ((Callback) getActivity())
-                        .onItemSelected(MovieContract.MovieEntry.buildMovieId(movieId),movieId
+                        .onItemSelected(MovieContract.MovieEntry.buildMovieId(movieId), movieId
                                 ,
                                 vh
                         );

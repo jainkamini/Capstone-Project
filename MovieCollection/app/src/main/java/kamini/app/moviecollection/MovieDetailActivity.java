@@ -5,13 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 ;
 
 
-public class MovieDetailActivity extends AppCompatActivity implements SimilarMovieFragment.Callback{
+public class MovieDetailActivity extends AppCompatActivity implements Callback{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +58,7 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
 
         return super.onOptionsItemSelected(item);
     }
-
+////when click on item on  similarmovie  this call back event occour in single pane mode
     @Override
     public void onItemSelected(Uri contentUri,Long mMovieId, MovieAdapter.ViewHolder vh) {
         Intent intent = new Intent(this, MovieDetailActivity.class)
@@ -91,9 +90,5 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
         }*/
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-    }
 
 }
