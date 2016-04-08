@@ -115,7 +115,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        
+
         /**
          * Instantiate a ViewPager and a PagerAdapter
          */
@@ -389,18 +389,19 @@ if (mMovieId != null) {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        AppCompatActivity activity = (AppCompatActivity)getActivity();
-        Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+
 
         if (data != null && data.moveToFirst() )
         {
-
+            AppCompatActivity activity = (AppCompatActivity)getActivity();
+            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
             mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
-            ((AppCompatActivity) getActivity()).   getSupportActionBar().setTitle(mMovieName);
+            activity.setSupportActionBar(toolbarView);
             Menu menu = toolbarView.getMenu();
             if (null != menu ) menu.clear();
             toolbarView.inflateMenu(R.menu.menu_detail);
+            activity.   getSupportActionBar().setTitle(mMovieName);
             finishCreatingMenu(toolbarView.getMenu());
         }
     }

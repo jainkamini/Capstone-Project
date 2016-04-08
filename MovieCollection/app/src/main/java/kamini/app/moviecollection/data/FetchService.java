@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -64,12 +66,20 @@ public String movieSelection;
     protected void onHandleIntent(Intent intent) {
       //  new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
       //  new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true);
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null || !ni.isConnected()) {
+            Log.w(TAG, "Not online, not refreshing.");
+            return;
+        }
         Bundle bundle =intent.getExtras();
         if (bundle !=null)
         {
             movieSelection=  bundle.getString(EXTRA_MOVIESELECTION);
             mMovieId=bundle.getString(EXTRA_MOVIE_ID);
-
+            sendStickyBroadcast(
+                    new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
             if (movieSelection.equals("Popular"))
             {
                 movieStatus="P";
@@ -111,6 +121,8 @@ public String movieSelection;
                     Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
                 }
             }
+            sendStickyBroadcast(
+                    new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
             Log.d(LOG_TAG, "Movie Selection. " +movieSelection);
         }
 

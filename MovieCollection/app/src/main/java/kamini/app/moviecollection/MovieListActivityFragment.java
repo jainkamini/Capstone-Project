@@ -154,15 +154,20 @@ public class MovieListActivityFragment extends Fragment implements
         public void onReceive(Context context, Intent intent) {
             if (FetchService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(FetchService.EXTRA_REFRESHING, false);
-                //updateRefreshingUI();
+                updateRefreshingUI();
             }
             else if (FetchService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())) {
                 mIsRefreshing=false;
-                // updateRefreshingUI();
+                 updateRefreshingUI();
                 Toast.makeText(getActivity(), getString(R.string.empty_recycler_view_no_network), Toast.LENGTH_LONG).show();
             }
         }
     };
+
+    private void updateRefreshingUI() {
+        mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
