@@ -41,7 +41,8 @@ public class NevigationDrawerFragment extends Fragment {
        // setSupportActionBar(toolbar);
         //Initializing NavigationView
         navigationView = (NavigationView)rootView. findViewById(R.id.navigation_view);
-        setFragment("Upcoming","U");
+      //  setFragment("Upcoming","U");
+        setFragment("Popular","P");
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 

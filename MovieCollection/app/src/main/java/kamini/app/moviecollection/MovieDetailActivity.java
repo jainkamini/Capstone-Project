@@ -34,12 +34,12 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
                     .commit();
 
             // Being here means we are in animation mode
-       //     supportPostponeEnterTransition();
+            //     supportPostponeEnterTransition();
         }
     }
 
     @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_movie_list, menu);
         return true;
@@ -66,7 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity implements SimilarMov
                 .setData(contentUri);
         intent.putExtra("MovieId", mMovieId);
         startActivity(intent);
-      //  Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
+        //  Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
        /* if (mTwoPane) {
             Bundle args = new Bundle();
             if (value != null) {

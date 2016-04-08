@@ -98,7 +98,7 @@ public String movieSelection;
             else if (movieSelection.equals("Similar"))
             {
                 movieStatus="S";
-                getMovieGenreData();
+
                 getSimilarMovieData(this.getResources().getString(R.string.similar));
                 Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
             }
