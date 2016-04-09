@@ -23,6 +23,8 @@
         android:scrollbarStyle="outsideOverlay"
         android:paddingLeft="@dimen/list_side_margin"
         android:paddingRight="@dimen/list_side_margin"
+        android:paddingStart="@dimen/list_side_margin"
+        android:paddingEnd="@dimen/list_side_margin"
         android:paddingTop="@dimen/abc_action_bar_icon_vertical_padding_material"/>
 
 
