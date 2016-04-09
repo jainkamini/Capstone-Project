@@ -167,15 +167,18 @@ return null;
         {
            // Log.e(LOG_TAG, "cursorcount:" + data.getCount());
              txttitle.setText(data.getString(COL_MOVIE_TITLE));
+            txttitle.setContentDescription(getContext().getString(R.string.originaltitel_description) + data.getString(COL_MOVIE_TITLE));
             txtgenre.setText(data.getString(COL_MOVIE_GENRE));
+            txtgenre.setContentDescription(getContext().getString(R.string.genre_description) + data.getString(COL_MOVIE_GENRE));
             txtdate.setText(data.getString(COL_MOVIE_DATE));
-            txtvotecount.setText("("+data.getString(COL_MOVIE_VOTECOUNT)+")");
+            txtdate.setContentDescription(getContext().getString(R.string.releasedate_description) + data.getString(COL_MOVIE_DATE));
+            txtvotecount.setText("(" + data.getString(COL_MOVIE_VOTECOUNT) + ")");
+            txtvotecount.setContentDescription(getContext().getString(R.string.votecount_description) + data.getString(COL_MOVIE_VOTECOUNT));
             txtvoteavg.setText(data.getString(COL_MOVIE_RATING));
-            /*txtname.setText(data.getString(COL_MOVIE_NAME));
-            txtvotecount.setText(data.getString(COL_MOVIE_VOTECOUNT));
-            txtvoteavg.setText(data.getString(COL_MOVIE_RATING));
-            txtdate.setText(data.getString(COL_MOVIE_DATE));*/
+            txtvoteavg.setContentDescription(getContext().getString(R.string.voteaverage_description) + data.getString(COL_MOVIE_RATING));
+
             txtoverview.setText(data.getString(COL_MOVIE_OVERVIEW));
+            txtoverview.setContentDescription(getContext().getString(R.string.overview_description) + data.getString(COL_MOVIE_OVERVIEW));
 
             Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_BACKDROP)).into(imgbackdrop);
             Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185" + data.getString(COL_MOVIE_POSTER)).into(imgposter);
@@ -195,6 +198,7 @@ if (mReviewContent.equals(null)) {
 }
             else
     txtreview.setText(mReviewContent);
+            txtreview.setContentDescription(getContext().getString(R.string.review_description)+mReviewContent);
             Log.e(LOG_TAG,"datacount:" + data.getCount());
 
         }

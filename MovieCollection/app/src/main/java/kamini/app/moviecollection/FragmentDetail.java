@@ -122,6 +122,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
         mviewPager = (ViewPager) rootView. findViewById(R.id.view_pager);
 
         mviewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
+        mviewPager.setContentDescription(getActivity().getString(R.string.PageSwitcher));
         // adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         // vpPager.setAdapter(adapterViewPager);
         mviewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -472,7 +473,7 @@ if (mUri !=null && mMovieId !=null) {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "Movie";
+                return "MOVIE";
             } else {
                 return "SIMILAR MOVIE";
             }

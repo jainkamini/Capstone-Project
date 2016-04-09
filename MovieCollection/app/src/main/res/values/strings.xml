@@ -36,6 +36,23 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
+
+<!--String Relateed to content Description-->
+    <string name="PageSwitcher">Switch pages here</string>
+    <string name="poster_description">The Poster of the movie</string>
+    <string name="title_description">The Title of the movie</string>
+    <string name="originaltitel_description">The Original Title of the movie</string>
+    <string name="releasedate_description">Release Date of Movie</string>
+    <string name="votecount_description">Vote count of movie</string>
+    <string name="voteaverage_description">Average Rating of Movie</string>
+    <string name="genre_description">Genre of  Movie</string>
+    <string name="overview_description">Overview of Movie </string>
+    <string name="review_description"> Review of Movie</string>
+    <string name="trailerplay_description">Play The Movie Trailer</string>
+    <string name="share_description">Share the Movie</string>
+    <string name="favorite_description">Save Movie as a favorite</string>
+
+
     <!-- Strings related to Widgets -->
     <string name="title_widget_movie">Movie Collection</string>
    <!-- Banner add unit id-->

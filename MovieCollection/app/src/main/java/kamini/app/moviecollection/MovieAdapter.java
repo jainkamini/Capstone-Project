@@ -47,11 +47,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         mCursor.moveToPosition(position);
        // holder.txttitle.setText("Original Title : " + mCursor.getString(MovieLoader.Query.original_title). + mCursor.getString(MovieLoader.Query.release_date));
         holder.txttitle.setText("Original Title : " + mCursor.getString(MovieLoader.Query.original_title));
+        holder.txttitle.setContentDescription((context.getString(R.string.originaltitel_description)) + mCursor.getString(MovieLoader.Query.original_title));
         holder.txtname.setText(mCursor.getString(MovieLoader.Query.title));
-        holder.txtvotecount.setText("Vote Count : "+mCursor.getString(MovieLoader.Query.vote_count));
-       holder.txtdate.setText("Release Date : "+mCursor.getString(MovieLoader.Query.release_date));
+        holder.txtname.setContentDescription((context.getString(R.string.title_description)) + mCursor.getString(MovieLoader.Query.title));
+        holder.txtvotecount.setText("Vote Count : " + mCursor.getString(MovieLoader.Query.vote_count));
+        holder.txtvotecount.setContentDescription((context.getString(R.string.votecount_description)) + mCursor.getString(MovieLoader.Query.vote_count));
+       holder.txtdate.setText("Release Date : " + mCursor.getString(MovieLoader.Query.release_date));
+        holder.txtdate.setContentDescription((context.getString(R.string.releasedate_description)) + mCursor.getString(MovieLoader.Query.release_date));
         holder.txtvoteavg.setText(mCursor.getString(MovieLoader.Query.vote_average));
-
+        holder.txtvoteavg.setContentDescription((context.getString(R.string.voteaverage_description)) + mCursor.getString(MovieLoader.Query.vote_average));
         Log.e(MovieListActivityFragment.LOG_TAG, "Position Item :" + mCursor.getString(MovieLoader.Query.original_title));
 
         Picasso.with(context).load("http://image.tmdb.org/t/p/w185" + mCursor.getString(MovieLoader.Query.poster_path)).into(holder.imgposter);
