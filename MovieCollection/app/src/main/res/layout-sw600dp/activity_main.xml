@@ -30,13 +30,7 @@
 
     tools:layout="@layout/fragment_nevigation" />
 
-    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment_detail"
-        android:name="kamini.app.moviecollection.FragmentDetail"
-        tools:context=".MainActivity"
-        tools:layout="@layout/fragment_detail" android:layout_width="wrap_content"
-        android:layout_height="match_parent" />-->
+
     <FrameLayout
         android:id="@+id/movie_detail_container"
         android:layout_width="0dp"

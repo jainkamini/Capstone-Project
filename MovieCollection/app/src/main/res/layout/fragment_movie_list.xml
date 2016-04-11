@@ -25,7 +25,6 @@
             android:layout_height="?attr/actionBarSize"
             android:elevation="0dp"
             android:background="@color/primary"
-
             app:layout_scrollFlags="scroll|enterAlways"
             >
 
