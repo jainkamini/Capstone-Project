@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -37,12 +38,12 @@ public class NevigationDrawerFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_nevigation, container, false);
         toolbar = (Toolbar)rootView. findViewById(R.id.toolbar);
-
-       // setSupportActionBar(toolbar);
+        ( (AppCompatActivity) getActivity()).   setSupportActionBar(toolbar);
+      //  ( (AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Upcoming");
+        // setSupportActionBar(toolbar);
         //Initializing NavigationView
         navigationView = (NavigationView)rootView. findViewById(R.id.navigation_view);
-      //  setFragment("Upcoming","U");
-        setFragment("Popular","P");
+        setFragment("Upcoming","U");
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -127,7 +128,8 @@ public class NevigationDrawerFragment extends Fragment {
     }
     public  void setFragment( String movieType,String movieStatus)
     {
-             MovieListActivityFragment fragment = new MovieListActivityFragment();
+        ( (AppCompatActivity) getActivity()).getSupportActionBar().setTitle(movieType);
+        MovieListActivityFragment fragment = new MovieListActivityFragment();
         FragmentTransaction frTransaction = getChildFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("movieselection", movieType);

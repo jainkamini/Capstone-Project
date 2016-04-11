@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -61,17 +60,15 @@ public class MovieListActivityFragment extends Fragment implements
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        mToolbar = (Toolbar)rootView. findViewById(R.id.toolbar);
 
-        ((AppCompatActivity) getActivity()).  setSupportActionBar(mToolbar);
 
-      //  ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      // ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //    ((AppCompatActivity) getActivity()).setDisplayShowTitleEnabled(true);
 
 
         movieSelection=this.getArguments().getString("movieselection");
         movieStatus=this.getArguments().getString("moviestatus");
-        ((AppCompatActivity) getActivity()).setTitle(movieSelection);
+    //    ((AppCompatActivity) getActivity()).setTitle(movieSelection);
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
 
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -180,6 +177,20 @@ public class MovieListActivityFragment extends Fragment implements
     }
 
 
+   /* @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+
+            // Inflate the menu; this adds items to the action bar if it is present.
+
+            inflater.inflate(R.menu.menu_detail, menu);
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+            menuItem.setVisible(false);
+
+
+
+    }*/
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
@@ -198,8 +209,12 @@ public class MovieListActivityFragment extends Fragment implements
 
 
         }, cursor   );
+       /*mToolbar = (Toolbar)getView(). findViewById(R.id.toolbar);
 
-
+        ((AppCompatActivity) getActivity()).  setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setTitle(movieSelection);
+        Menu menu = mToolbar.getMenu();
+        if (null != menu) menu.clear();*/
         if(movieAdapter.getItemCount()==0){
             mEmptyView.setVisibility(View.VISIBLE);
         } else{

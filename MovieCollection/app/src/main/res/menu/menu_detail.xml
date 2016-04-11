@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_play"
-        android:title="@string/action_share"
+        android:title="@string/action_play"
         app:showAsAction="always"
         android:icon="@drawable/ytlogo" />
     <item android:id="@+id/action_share"

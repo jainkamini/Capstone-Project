@@ -69,4 +69,5 @@ public class MovieDetailActivity extends AppCompatActivity implements Callback{
     }
 
 
+
 }

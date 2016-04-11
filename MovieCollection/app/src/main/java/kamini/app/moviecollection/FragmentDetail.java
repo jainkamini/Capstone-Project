@@ -116,13 +116,15 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+           /* AppCompatActivity activity = (AppCompatActivity)getActivity();
+        Toolbar toolbarView = (Toolbar) rootView.findViewById(R.id.toolbar);
+        activity.setSupportActionBar(toolbarView);*/
         /**
          * Instantiate a ViewPager and a PagerAdapter
          */
         mviewPager = (ViewPager) rootView. findViewById(R.id.view_pager);
 
         mviewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager()));
-        mviewPager.setContentDescription(getActivity().getString(R.string.PageSwitcher));
         // adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         // vpPager.setAdapter(adapterViewPager);
         mviewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -151,14 +153,14 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
         ((AppCompatActivity) getActivity()).setTitle(mMovieName);
         Log.e(LOG_TAG, "Movie name for title" + mMovieName);
-     //   ((AppCompatActivity) getActivity()).setDisplayShowHomeEnabled(true);*/
+        //   ((AppCompatActivity) getActivity()).setDisplayShowHomeEnabled(true);*/
 
         TabLayout tabLayout = (TabLayout)rootView. findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
         FloatingActionButton fab = (FloatingActionButton)rootView. findViewById(R.id.fab);
-if (mMovieId != null) {
-    mFavoriteStatus = checkFavorite();
-}
+        if (mMovieId != null) {
+            mFavoriteStatus = checkFavorite();
+        }
         if (mFavoriteStatus==1)
         {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
@@ -172,7 +174,7 @@ if (mMovieId != null) {
             public void onClick(View view) {
 
                 // Get the tracker
-               Tracker tracker = ((MyApplication)getActivity().getApplication()).getTracker();
+                Tracker tracker = ((MyApplication)getActivity().getApplication()).getTracker();
 
 // Send the hit
                 tracker.send(new HitBuilders.EventBuilder()
@@ -200,7 +202,7 @@ if (mMovieId != null) {
 
 
         // getLoaderManager().initLoader(DETAIL_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
-        getLoaderManager().initLoader(0, null, this);
+      //  getLoaderManager().initLoader(0, null, this);
         IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
         filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
 
@@ -213,7 +215,11 @@ if (mMovieId != null) {
     }
 
 
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
     private int saveFavorite() {
         ContentValues movieValues = new ContentValues();
         if (mFavoriteStatus == 0)
@@ -299,14 +305,24 @@ if (mMovieId != null) {
     };
 
 
-   /* private void finishCreatingMenu(Menu menu) {
+    private void finishCreatingMenu(Menu menu) {
         // Retrieve the share menu item
         MenuItem menuItem = menu.findItem(R.id.action_share);
-        menuItem.setIntent(createShareForecastIntent());
+        menuItem.setIntent(createShareMovieIntent());
+
+
+
     }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        *//*if (getActivity() instanceof MovieDetailActivity) {
+
+
+    /* private void finishCreatingMenu(Menu menu) {
+         // Retrieve the share menu item
+         MenuItem menuItem = menu.findItem(R.id.action_share);
+         menuItem.setIntent(createShareForecastIntent());
+     }
+     @Override
+     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+         *//*if (getActivity() instanceof MovieDetailActivity) {
             // Inflate the menu; this adds items to the action bar if it is present.
             inflater.inflate(R.menu.menu_detail, menu);
             finishCreatingMenu(menu);
@@ -316,40 +332,40 @@ if (mMovieId != null) {
         finishCreatingMenu(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }*/
-    private void finishCreatingMenu(Menu menu) {
+    /*private void finishCreatingMenu(Menu menu) {
         // Retrieve the share menu item
         MenuItem menuItem = menu.findItem(R.id.action_share);
-        menuItem.setIntent(createShareForecastIntent());
+        menuItem.setIntent(createShareMovieIntent());
     }
 
 
+
+
+*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        if ( getActivity() instanceof MovieDetailActivity ){
-            // Inflate the menu; this adds items to the action bar if it is present.
-            inflater.inflate(R.menu.menu_detail, menu);
-            finishCreatingMenu(menu);
-        }
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+        inflater.inflate(R.menu.menu_detail, menu);
+        finishCreatingMenu(menu);
+
 
 
     }
 
-
-
-
-    private Intent createShareForecastIntent() {
+    private Intent createShareMovieIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
-
         shareIntent.putExtra(Intent.EXTRA_TEXT,
                 MOVIE_TRAILER_SHARE + mShareTrailerKey);
 
         return shareIntent;
     }
-    @Override
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -392,19 +408,29 @@ if (mMovieId != null) {
 
 
 
+
         if (data != null && data.moveToFirst() )
         {
-            AppCompatActivity activity = (AppCompatActivity)getActivity();
-            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+
+
             mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
-            activity.setSupportActionBar(toolbarView);
-            Menu menu = toolbarView.getMenu();
-            if (null != menu ) menu.clear();
-            toolbarView.inflateMenu(R.menu.menu_detail);
-            activity.   getSupportActionBar().setTitle(mMovieName);
-            finishCreatingMenu(toolbarView.getMenu());
+
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+           Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+           activity.setSupportActionBar(toolbarView);
+           activity.getSupportActionBar().setTitle(mMovieName);
+          Menu menu = toolbarView.getMenu();
+           if (null != menu) menu.clear();
+          toolbarView.inflateMenu(R.menu.menu_detail);
+               finishCreatingMenu(toolbarView.getMenu());
+
+
+
         }
+
+
+
     }
 
     @Override
@@ -430,10 +456,10 @@ if (mMovieId != null) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
 
-if (mUri !=null && mMovieId !=null) {
-    arguments.putParcelable(MovieDetailFragment.DETAIL_URI, mUri);
-    arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), mMovieId);
-}
+                    if (mUri !=null && mMovieId !=null) {
+                        arguments.putParcelable(MovieDetailFragment.DETAIL_URI, mUri);
+                        arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), mMovieId);
+                    }
                  /* MovieDetailFragment fragmentFirst = new MovieDetailFragment();
                     fragmentFirst.setArguments(arguments);
                     return fragmentFirst;*/
@@ -444,7 +470,7 @@ if (mUri !=null && mMovieId !=null) {
                 frTransaction.add(R.id.movie_container, fragment);
                     frTransaction.addToBackStack(null);
                 frTransaction.commit();*/
-                   return MovieDetailFragment.newInstance(arguments);
+                    return MovieDetailFragment.newInstance(arguments);
 
                 case 1: // Fragment # 0 - This will show FirstFragment different title
                    /*SimilarMovieFragment similarMovieFragment = new SimilarMovieFragment();
@@ -473,7 +499,7 @@ if (mUri !=null && mMovieId !=null) {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "MOVIE";
+                return "Movie";
             } else {
                 return "SIMILAR MOVIE";
             }
