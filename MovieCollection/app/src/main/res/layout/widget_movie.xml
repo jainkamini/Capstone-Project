@@ -11,7 +11,7 @@
 
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
+
     android:id="@+id/layout_widget"
 
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,8 +36,9 @@
         android:text="MovieName"
         android:layout_height="wrap_content"
         android:id="@+id/txt_moviename"
-        android:layout_above="@+id/btn_next"
+android:layout_above="@+id/btn_next"
         android:layout_alignParentStart="true" />
+
 
     <TextView
         android:layout_width="match_parent"
@@ -52,9 +53,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_next"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-android:background="@drawable/next"
+        android:layout_alignRight="@+id/txt_moviename"
 
-        android:layout_marginStart="147dp" />
+        android:layout_alignParentEnd="true"
+
+android:background="@drawable/nextbtn"
+        android:layout_marginStart="280dp"
+        android:layout_alignTop="@+id/txt_moviedate" />
+
 </RelativeLayout>
 </FrameLayout>
