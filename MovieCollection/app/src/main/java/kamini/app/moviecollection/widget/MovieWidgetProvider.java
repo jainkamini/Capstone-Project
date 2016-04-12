@@ -95,7 +95,7 @@ public class MovieWidgetProvider extends AppWidgetProvider {
 
               data =
                         context.getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(mMovieidnew), MOVIE_COLUMNS,
-                                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " not in ( " + movielist +" )", null, null);
+                                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " not in ( " + movielist +" )" +" AND " +  MovieContract.MovieEntry.COLUMN_MOVIE_STATUS +"= 'U' ", null, null);
 
 
             }

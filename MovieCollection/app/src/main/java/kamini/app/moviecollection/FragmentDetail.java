@@ -251,6 +251,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
     }
 
+
     private int checkFavorite() {
 
         Cursor cursor =  getContext().getContentResolver().query(MovieContract.MovieEntry.buildMovieUri(mMovieId), null,
