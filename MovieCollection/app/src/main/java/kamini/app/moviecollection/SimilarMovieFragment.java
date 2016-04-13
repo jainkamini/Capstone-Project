@@ -17,8 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -85,33 +83,14 @@ public class SimilarMovieFragment extends Fragment    implements
         movieSelection="Similar";
         movieStatus="S";
 
-       /* mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
 
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.primary,
-                R.color.primary_dark,
-                R.color.primary_light);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Set refresh to false so the refresh icon doesn't just spin indefinitely
-                // This is just a placeholder.
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });*/
-
-
-        //   movieAdapter = new MovieAdapter(items);
         mEmptyView = (TextView) rootView.findViewById(R.id.recycler_view_empty);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_movie_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //movieAdapter.setHasStableIds(true);
-        //  movieAdapter.setHasStableIds(true);
-        // movieAdapter=new MovieAdapter(getActivity(),null);
+
         mRecyclerView.setHasFixedSize(true);
 
-        // mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // recyclerView.setAdapter(movieAdapter);
+
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -175,26 +154,7 @@ public class SimilarMovieFragment extends Fragment    implements
     }
 
 
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (Callback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnClickHeadlineSelectedListener");
-        }
-    }
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        this.mCallback = null;
-    }*/
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         //  movieAdapter=new MovieAdapter(getActivity(),MovieAdapter.MovieAdapterOnClickHandler()

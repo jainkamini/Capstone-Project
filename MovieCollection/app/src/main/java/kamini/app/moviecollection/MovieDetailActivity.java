@@ -42,7 +42,9 @@ public class MovieDetailActivity extends AppCompatActivity implements Callback{
         Intent intent = new Intent(this, MovieDetailActivity.class)
                 .setData(contentUri);
         intent.putExtra("MovieId", mMovieId);
+        
         startActivity(intent);
+      //  startActivity(intent);
         //  Log.e(LOG_TAG, "Mainactivity MovieId......" + mMovieId);
        /* if (mTwoPane) {
             Bundle args = new Bundle();

@@ -65,9 +65,15 @@ public class MovieListActivityFragment extends Fragment implements
       // ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //    ((AppCompatActivity) getActivity()).setDisplayShowTitleEnabled(true);
 
-
-        movieSelection=this.getArguments().getString("movieselection");
-        movieStatus=this.getArguments().getString("moviestatus");
+        if (savedInstanceState ==null) {
+            movieSelection = this.getArguments().getString("movieselection");
+            movieStatus = this.getArguments().getString("moviestatus");
+        }
+        else
+        {
+            movieSelection = savedInstanceState.getString("movieselection");
+            movieStatus = savedInstanceState.getString("moviestatus");
+        }
     //    ((AppCompatActivity) getActivity()).setTitle(movieSelection);
         mSwipeRefreshLayout = (SwipeRefreshLayout)rootView. findViewById(R.id.swipe_refresh_layout);
 
@@ -118,7 +124,13 @@ public class MovieListActivityFragment extends Fragment implements
     }
 
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        outState.putString("movieselection", movieSelection);
+        outState.putString("moviestatus",movieStatus);
+        super.onSaveInstanceState(outState);
+    }
 
 
 

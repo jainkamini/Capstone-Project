@@ -92,14 +92,6 @@ private  String mReviewContent="Review";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mUri = arguments.getParcelable(MovieDetailFragment.DETAIL_URI);
-            mMovieId=arguments.getLong(String.valueOf(MovieDetailFragment.MOVIE_ID));
-           // mTransitionAnimation = arguments.getBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION, false);
-            Log.e(LOG_TAG,"arguments:" + arguments);
-            Log.e(LOG_TAG,"Movieid..........:" + mMovieId);
-        }
 
         /*page = getArguments().getInt("someInt", 0);
         title = getArguments().getString("someTitle");*/
@@ -110,6 +102,17 @@ private  String mReviewContent="Review";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(MovieDetailFragment.DETAIL_URI);
+            mMovieId=arguments.getLong(String.valueOf(MovieDetailFragment.MOVIE_ID));
+            // mTransitionAnimation = arguments.getBoolean(DetailFragment.DETAIL_TRANSITION_ANIMATION, false);
+            Log.e(LOG_TAG,"arguments:" + arguments);
+            Log.e(LOG_TAG,"Movieid..........:" + mMovieId);
+        }
+
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         txttitle= (TextView) view.findViewById(R.id.list_movie_title_textview);
         imgbackdrop=(ImageView)view.findViewById(R.id.list_backdrop_imageview);
@@ -157,6 +160,8 @@ private  String mReviewContent="Review";
        }
 return null;
     }
+
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {

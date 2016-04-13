@@ -27,6 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         this.context=mContext;
         this.mClickHandler=dh;
 
+
     }
    /* public MovieAdapter(List<MovieItem> items){
         this.items = items;

@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
@@ -155,7 +156,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
         TabLayout tabLayout = (TabLayout)rootView. findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
-        FloatingActionButton fab = (FloatingActionButton)rootView. findViewById(R.id.fab);
+         fab = (FloatingActionButton)rootView. findViewById(R.id.fab);
         if (mMovieId != null) {
             mFavoriteStatus = checkFavorite();
         }
@@ -180,27 +181,19 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
                         .setAction("Did thing")
                         .setLabel(mMovieName)
                         .build());
-                saveFavorite();
+        int saveStatus=        saveFavorite();
 
-
-
+if (saveStatus==1) {
+    fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_favoritesave));
+}
+                else
+    fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_favoriteunsaved));
 
 
 
             }
         });
-        /*mFavoriteStatus=checkFavorite();
-        if (mFavoriteStatus==1)
-        {
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
-        }
 
-        else
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));*/
-
-
-        // getLoaderManager().initLoader(DETAIL_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
-      //  getLoaderManager().initLoader(0, null, this);
         IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION_STATE_CHANGE);
         filter.addAction(FetchService.BROADCAST_ACTION_NO_CONNECTIVITY);
 
@@ -221,7 +214,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
     }
     private int saveFavorite() {
         ContentValues movieValues = new ContentValues();
-        if (mFavoriteStatus == 0)
+        if (checkFavorite() == 0)
         {
             movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_FAVORITESTATUS,
                     1);
@@ -230,6 +223,8 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
             Toast.makeText(getContext(), "Movie Added", Toast.LENGTH_SHORT).show();
             //  fab.setImageResource(R.drawable.ic_delete_black);
             //  fab.setBackground(getResources().getDrawable(R.drawable.ic_delete_black));
+
+           /* fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoritesave));*/
 
             return 1;
 
@@ -240,6 +235,10 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
         int mUpdateStatus = getContext().getContentResolver().update(
                 MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
         Toast.makeText(getContext(),"Movie Deleted",Toast.LENGTH_SHORT).show();
+     //   fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoriteunsaved));
+    //    fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_favoriteunsaved));
+
+
         //  fab.setBackground(getResources().getDrawable(R.drawable.ic_star_black));
 
         //   fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));
@@ -249,6 +248,9 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
 
     }
+
+
+
 
 
     private int checkFavorite() {
