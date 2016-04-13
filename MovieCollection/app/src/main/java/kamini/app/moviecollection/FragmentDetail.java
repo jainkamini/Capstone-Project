@@ -161,11 +161,11 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
         }
         if (mFavoriteStatus==1)
         {
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoritesave));
         }
 
         else
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoriteunsaved));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

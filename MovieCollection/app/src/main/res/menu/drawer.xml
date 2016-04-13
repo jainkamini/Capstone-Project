@@ -9,7 +9,7 @@
             <item
                 android:id="@+id/poular"
                 android:checked="false"
-                android:icon="@drawable/ic_inbox_black"
+                android:icon="@drawable/ic_popular"
                 android:title="@string/nevi_title_popular" />
 
             <item
@@ -21,20 +21,20 @@
             <item
                 android:id="@+id/upcoming"
                 android:checked="false"
-                android:icon="@drawable/ic_send_black"
+                android:icon="@drawable/ic_upcoming"
                 android:title="@string/nevi_title_upcoming" />
 
             <item
                 android:id="@+id/nowplaying"
                 android:checked="false"
-                android:icon="@drawable/ic_drafts_black"
+                android:icon="@drawable/ic_nowplaying"
                 android:title="@string/nevi_title_nowplaying" />
 
 
             <item
                 android:id="@+id/favorite"
                 android:checked="false"
-                android:icon="@drawable/ic_email_black"
+                android:icon="@drawable/favorite_nevicon"
                 android:title="@string/nevi_title_favorite" />
 
 

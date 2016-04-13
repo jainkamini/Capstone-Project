@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-
-        android:src="@android:drawable/ic_input_add" />
+android:background="@drawable/ic_favoritesave"
+        />
 
 
     <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
