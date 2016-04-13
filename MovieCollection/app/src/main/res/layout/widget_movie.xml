@@ -15,7 +15,7 @@
     android:id="@+id/layout_widget"
 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+   >
 
     <ImageView
         android:layout_width="match_parent"
@@ -54,6 +54,7 @@ android:layout_above="@+id/btn_next"
         android:id="@+id/btn_next"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/txt_moviename"
+        android:layout_alignStart="@+id/txt_moviename"
 
         android:layout_alignParentEnd="true"
 

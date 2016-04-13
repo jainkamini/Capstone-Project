@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import java.util.List;
 import java.util.Vector;
 
+import kamini.app.moviecollection.BuildConfig;
 import kamini.app.moviecollection.MovieAdapter;
 import kamini.app.moviecollection.R;
 import kamini.app.moviecollection.api.TheMovieDBService;
@@ -149,7 +150,7 @@ public String movieSelection;
         TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
 
-        call =  theMovieDBAPI.getSimilarMovieResponse("b85cf4603ce5916a993dd400866808bc");
+        call =  theMovieDBAPI.getSimilarMovieResponse(BuildConfig.MOVIE_API_KEY);
         call.enqueue(new Callback<TheMovieDBResult>() {
             @Override
             public void onResponse(Response<TheMovieDBResult> response) {
@@ -204,9 +205,9 @@ public String movieSelection;
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
-callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808bc");
+callReview =theMovieDBAPI.getMovieReviewResponse(BuildConfig.MOVIE_API_KEY);
 
-           // call =  theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808bc");
+
             callReview.enqueue(new Callback<MovieReviewResult>() {
                 @Override
                 public void onResponse(Response<MovieReviewResult> response) {
@@ -259,7 +260,7 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
 
-            callTrailer =  theMovieDBAPI.getMovieVideoResponse("b85cf4603ce5916a993dd400866808bc");
+            callTrailer =  theMovieDBAPI.getMovieVideoResponse(BuildConfig.MOVIE_API_KEY);
             callTrailer.enqueue(new Callback<MovieTrailerResult>() {
                 @Override
                 public void onResponse(Response<MovieTrailerResult> response) {
@@ -313,7 +314,7 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             TheMovieDBService.TheMovieDBAPI theMovieDBAPI = retrofit.create(TheMovieDBService.TheMovieDBAPI.class);
 
 
-            callGenre =  theMovieDBAPI.getMovieGenreResponse("b85cf4603ce5916a993dd400866808bc");
+            callGenre =  theMovieDBAPI.getMovieGenreResponse(BuildConfig.MOVIE_API_KEY);
             callGenre.enqueue(new Callback<GenreResult>() {
                 @Override
                 public void onResponse(Response<GenreResult> response) {
@@ -398,19 +399,19 @@ callReview =theMovieDBAPI.getMovieReviewResponse("b85cf4603ce5916a993dd400866808
             if (movieSelectiontype.equals(this.getResources().getString(R.string.popular)) )
 
             {
-                call =  theMovieDBAPI.getMoviePopularResponse("b85cf4603ce5916a993dd400866808bc");
+                call =  theMovieDBAPI.getMoviePopularResponse(BuildConfig.MOVIE_API_KEY);
             }
             else if (movieSelectiontype.equals(this.getResources().getString(R.string.toprated)) )
-            {call =  theMovieDBAPI.getMovieTopratedResponse( "b85cf4603ce5916a993dd400866808bc");
+            {call =  theMovieDBAPI.getMovieTopratedResponse(BuildConfig.MOVIE_API_KEY);
 
 
             }
             else if (movieSelectiontype.equals(this.getResources().getString(R.string.nowplaying)) ) {
-        call =  theMovieDBAPI.getMovieNowplayingResponse( "b85cf4603ce5916a993dd400866808bc");
+        call =  theMovieDBAPI.getMovieNowplayingResponse( BuildConfig.MOVIE_API_KEY);
 
             }
           else
-                call =  theMovieDBAPI.getMovieUpcomingResponse( "b85cf4603ce5916a993dd400866808bc");
+                call =  theMovieDBAPI.getMovieUpcomingResponse( BuildConfig.MOVIE_API_KEY);
 
             call.enqueue(new Callback<TheMovieDBResult>() {
                 @Override

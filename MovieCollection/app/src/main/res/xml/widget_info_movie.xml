@@ -6,7 +6,7 @@
     android:minResizeHeight="@dimen/widget_movie_min_resize_height"
     android:minResizeWidth="@dimen/widget_movie_min_resize_width"
     android:minWidth="@dimen/widget_movie_default_width"
-    android:previewImage="@drawable/background_material"
+    android:previewImage="@drawable/widget_icon"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="0"
     tools:ignore="UnusedAttribute" />

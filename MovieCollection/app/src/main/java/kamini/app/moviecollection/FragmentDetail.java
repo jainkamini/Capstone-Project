@@ -151,9 +151,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
         });
 
 
-        ((AppCompatActivity) getActivity()).setTitle(mMovieName);
-        Log.e(LOG_TAG, "Movie name for title" + mMovieName);
-        //   ((AppCompatActivity) getActivity()).setDisplayShowHomeEnabled(true);*/
+
 
         TabLayout tabLayout = (TabLayout)rootView. findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mviewPager);
@@ -218,6 +216,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+
         super.onActivityCreated(savedInstanceState);
     }
     private int saveFavorite() {
@@ -311,38 +310,15 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
         MenuItem menuItem = menu.findItem(R.id.action_share);
         menuItem.setIntent(createShareMovieIntent());
 
-
-
-    }
-
-
-    /* private void finishCreatingMenu(Menu menu) {
-         // Retrieve the share menu item
-         MenuItem menuItem = menu.findItem(R.id.action_share);
-         menuItem.setIntent(createShareForecastIntent());
-     }
-     @Override
-     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-         *//*if (getActivity() instanceof MovieDetailActivity) {
-            // Inflate the menu; this adds items to the action bar if it is present.
-            inflater.inflate(R.menu.menu_detail, menu);
-            finishCreatingMenu(menu);
-        }*//*
-       menu.clear();
-        inflater.inflate(R.menu.menu_detail, menu);
-        finishCreatingMenu(menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }*/
-    /*private void finishCreatingMenu(Menu menu) {
-        // Retrieve the share menu item
-        MenuItem menuItem = menu.findItem(R.id.action_share);
-        menuItem.setIntent(createShareMovieIntent());
     }
 
 
 
 
-*/
+
+
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -350,8 +326,8 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        inflater.inflate(R.menu.menu_detail, menu);
-        finishCreatingMenu(menu);
+            inflater.inflate(R.menu.menu_detail, menu);
+            finishCreatingMenu(menu);
 
 
 
@@ -416,7 +392,9 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
             mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
-
+           /* AppCompatActivity activity = (AppCompatActivity) getActivity();
+            ActionBar actionBar = activity.getSupportActionBar();
+            actionBar.setTitle(mMovieName);*/
             AppCompatActivity activity = (AppCompatActivity) getActivity();
            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
            activity.setSupportActionBar(toolbarView);
