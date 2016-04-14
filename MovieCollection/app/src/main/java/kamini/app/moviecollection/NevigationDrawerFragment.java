@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,7 +17,7 @@ public class NevigationDrawerFragment extends Fragment {
     public static final String LOG_TAG = NevigationDrawerFragment.class.getSimpleName();
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
 
 
 
@@ -37,8 +36,8 @@ public class NevigationDrawerFragment extends Fragment {
 
 
         View rootView = inflater.inflate(R.layout.fragment_nevigation, container, false);
-        toolbar = (Toolbar)rootView. findViewById(R.id.toolbar);
-        ( (AppCompatActivity) getActivity()).   setSupportActionBar(toolbar);
+        mToolbar = (Toolbar)rootView. findViewById(R.id.toolbar);
+      //  ( (AppCompatActivity) getActivity()).   setSupportActionBar(toolbar);
       //  ( (AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Upcoming");
         // setSupportActionBar(toolbar);
         //Initializing NavigationView
@@ -94,7 +93,7 @@ public class NevigationDrawerFragment extends Fragment {
 
         // Initializing Drawer Layout and ActionBarToggle
         drawerLayout = (DrawerLayout) rootView.findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, mToolbar, R.string.openDrawer, R.string.closeDrawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -128,7 +127,8 @@ public class NevigationDrawerFragment extends Fragment {
     }
     public  void setFragment( String movieType,String movieStatus)
     {
-        ( (AppCompatActivity) getActivity()).getSupportActionBar().setTitle(movieType);
+        mToolbar.setTitle(movieType);
+     //  ( (AppCompatActivity) getActivity()).getSupportActionBar().setTitle(movieType);
         MovieListActivityFragment fragment = new MovieListActivityFragment();
         FragmentTransaction frTransaction = getChildFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();

@@ -17,8 +17,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +49,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
     static final String DETAIL_URI = "URI";
     private Uri mUri;
     static final Long MOVIE_ID=12345678910L;
-    private Long mMovieId;
+    private Long mMovieId=12345678910L;
     private static final int DETAIL_LOADER = 0;
     private String movieSelection="Detail";
     public static String mShareTrailerKey;
@@ -55,6 +57,7 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
     private static final String MOVIE_TRAILER_SHARE = "http://www.youtube.com/watch?v=";
     private static FloatingActionButton fab;
     private String mMovieName;
+    private Toolbar mToolbar;
 
     private static final String[] DETAIL_COLUMNS = {
             MovieContract.MovieEntry.TABLE_NAME + "." +  MovieContract.MovieEntry._ID,
@@ -87,13 +90,12 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
     public static final int COL_MOVIE_TRAILERKEY = 10;
     public static final int COL_MOVIE_TRAILERNAME = 11;
 
-
+    ActionBar actionBar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     /*   mUri=getIntent().getData();
-        mMovieId=getIntent().getExtras().getLong("MovieId");*/
+
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -116,10 +118,8 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
 
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mToolbar = (Toolbar)rootView.findViewById(R.id.toolbar);
 
-           /* AppCompatActivity activity = (AppCompatActivity)getActivity();
-        Toolbar toolbarView = (Toolbar) rootView.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(toolbarView);*/
         /**
          * Instantiate a ViewPager and a PagerAdapter
          */
@@ -150,7 +150,13 @@ public class FragmentDetail extends Fragment implements  android.support.v4.app.
                 // Code goes here
             }
         });
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                getActivity().onBackPressed();
+            }
+        });
 
 
 
@@ -209,7 +215,8 @@ if (saveStatus==1) {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAIL_LOADER, null, this);
-
+       /* AppCompatActivity activity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = activity.getSupportActionBar();*/
         super.onActivityCreated(savedInstanceState);
     }
     private int saveFavorite() {
@@ -221,10 +228,7 @@ if (saveStatus==1) {
             int mUpdateStatus =getContext(). getContentResolver().update(
                     MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
             Toast.makeText(getContext(), "Movie Added", Toast.LENGTH_SHORT).show();
-            //  fab.setImageResource(R.drawable.ic_delete_black);
-            //  fab.setBackground(getResources().getDrawable(R.drawable.ic_delete_black));
 
-           /* fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoritesave));*/
 
             return 1;
 
@@ -235,14 +239,7 @@ if (saveStatus==1) {
         int mUpdateStatus = getContext().getContentResolver().update(
                 MovieContract.MovieEntry.CONTENT_URI, movieValues, MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
         Toast.makeText(getContext(),"Movie Deleted",Toast.LENGTH_SHORT).show();
-     //   fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favoriteunsaved));
-    //    fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_favoriteunsaved));
 
-
-        //  fab.setBackground(getResources().getDrawable(R.drawable.ic_star_black));
-
-        //   fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black));
-        //   fab.setImageResource(R.drawable.ic_star_black);
         return 0;
 
 
@@ -273,7 +270,7 @@ if (saveStatus==1) {
         inputIntent.putExtra(FetchService.EXTRA_MOVIESELECTION, movieSelection);
         inputIntent.putExtra(FetchService.EXTRA_MOVIE_ID, String.valueOf(mMovieId));
         getActivity().  startService(inputIntent);
-        //  getActivity(). startService(new Intent(getActivity(), FetchService.class));
+
     }
 
     @Override
@@ -307,10 +304,35 @@ if (saveStatus==1) {
     };
 
 
-    private void finishCreatingMenu(Menu menu) {
+    private void finishCreatingMenu(Menu menu ,Toolbar toolbar) {
         // Retrieve the share menu item
         MenuItem menuItem = menu.findItem(R.id.action_share);
-        menuItem.setIntent(createShareMovieIntent());
+      //  menuItem.setIntent(createShareMovieIntent());
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        if(mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(createShareMovieIntent());
+        }
+
+
+
+
+
+        toolbar.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id == R.id.action_play)
+                        {
+
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" +mShareTrailerKey)));
+                        }
+
+                        return true;
+                    }
+                });
+
 
     }
 
@@ -329,7 +351,15 @@ if (saveStatus==1) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
             inflater.inflate(R.menu.menu_detail, menu);
-            finishCreatingMenu(menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        if(mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(createShareMovieIntent());
+        }
+        else
+            Log.d(LOG_TAG, "Share action provider is null");
+          //  finishCreatingMenu(menu);
 
 
 
@@ -382,6 +412,8 @@ if (saveStatus==1) {
         return null;
     }
 
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
@@ -394,22 +426,26 @@ if (saveStatus==1) {
 
             mShareTrailerKey=data.getString(COL_MOVIE_TRAILERKEY);
             mMovieName=data.getString(COL_MOVIE_NAME);
+          fab.setVisibility(View.VISIBLE);
            /* AppCompatActivity activity = (AppCompatActivity) getActivity();
             ActionBar actionBar = activity.getSupportActionBar();
-            actionBar.setTitle(mMovieName);*/
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-           Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
-           activity.setSupportActionBar(toolbarView);
-           activity.getSupportActionBar().setTitle(mMovieName);
-          Menu menu = toolbarView.getMenu();
-           if (null != menu) menu.clear();
-          toolbarView.inflateMenu(R.menu.menu_detail);
-               finishCreatingMenu(toolbarView.getMenu());
+            actionBar.setTitle("Upcoming");
+            actionBar.setTitle(mMovieName);
+*/
+
+          //  AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+            mToolbar.setTitle(mMovieName);
+
+            Menu menu = mToolbar.getMenu();
+            if (null != menu) menu.clear();
+            mToolbar.inflateMenu(R.menu.menu_detail);
+            finishCreatingMenu(mToolbar.getMenu(),mToolbar);
+
 
 
 
         }
-
 
 
     }
@@ -441,29 +477,11 @@ if (saveStatus==1) {
                         arguments.putParcelable(MovieDetailFragment.DETAIL_URI, mUri);
                         arguments.putLong(String.valueOf(MovieDetailFragment.MOVIE_ID), mMovieId);
                     }
-                 /* MovieDetailFragment fragmentFirst = new MovieDetailFragment();
-                    fragmentFirst.setArguments(arguments);
-                    return fragmentFirst;*/
 
-               /* MovieDetailFragment fragment = new MovieDetailFragment();
-                FragmentTransaction frTransaction = getChildFragmentManager().beginTransaction();
-
-                frTransaction.add(R.id.movie_container, fragment);
-                    frTransaction.addToBackStack(null);
-                frTransaction.commit();*/
                     return MovieDetailFragment.newInstance(arguments);
 
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                   /*SimilarMovieFragment similarMovieFragment = new SimilarMovieFragment();
-                    similarMovieFragment.setArguments(arguments);
-                    return similarMovieFragment;*/
-                    /*SimilarMovieFragment fragmentsimilar = new SimilarMovieFragment();
-                    FragmentTransaction frTransactionsimilar = getChildFragmentManager().beginTransaction();
 
-
-                    frTransactionsimilar.add(R.id.similarmovie_container, fragmentsimilar);
-                    frTransactionsimilar.addToBackStack(null);
-                    frTransactionsimilar.commit();*/
                     if (mUri !=null && mMovieId !=null) {
                         arguments.putParcelable(SimilarMovieFragment.DETAIL_URI, mUri);
                         arguments.putLong(String.valueOf(SimilarMovieFragment.MOVIE_ID), mMovieId);

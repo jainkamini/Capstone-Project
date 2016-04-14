@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ga_trackingId">UA-76024303-1</string>
+    <string name="ga_trackingId">UA-xxxxx-x</string>
     <bool name="ga_autoActivityTracking">false</bool>
     <screenName name="kamini.app.moviecollection.MainActivity">
         Main screen

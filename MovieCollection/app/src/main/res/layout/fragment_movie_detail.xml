@@ -19,9 +19,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-<LinearLayout xmlns:Android="http://schemas.Android.com/apk/res/Android"
-    xmlns:tools="http://schemas.Android.com/tools"
-    xmlns:card_view="http://schemas.Android.com/apk/res-auto"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

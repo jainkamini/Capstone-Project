@@ -35,7 +35,7 @@ public class SimilarMovieFragment extends Fragment    implements
     static final String DETAIL_URI = "URI";
     private Uri mUri;
     static final Long MOVIE_ID=12345678910L;
-    private Long mMovieId;
+    private Long mMovieId=12345678910L;
     private Long mMovieIdNew;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;

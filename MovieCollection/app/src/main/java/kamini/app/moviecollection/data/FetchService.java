@@ -53,7 +53,7 @@ public class FetchService extends IntentService
         public static final String EXTRA_MOVIE_ID=
                 "kamini.app.moviecollection.data.intent.extra.MOVIED_ID";
 public String movieSelection;
-        public String mMovieId;
+        private String  mMovieId ="";
 
         public String movieStatus;
 
@@ -78,7 +78,21 @@ public String movieSelection;
         if (bundle !=null)
         {
             movieSelection=  bundle.getString(EXTRA_MOVIESELECTION);
-            mMovieId=bundle.getString(EXTRA_MOVIE_ID);
+
+
+            mMovieId = bundle.getString(EXTRA_MOVIE_ID);
+
+
+
+            if ((mMovieId==null)|| (mMovieId.equals("12345678910"))) {
+                mMovieId = "0";
+            }
+
+
+
+
+
+
             sendStickyBroadcast(
                     new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, true));
             if (movieSelection.equals("Popular"))
@@ -107,15 +121,18 @@ public String movieSelection;
                 getMovieData(this.getResources().getString(R.string.nowplaying));
             }
             else if (movieSelection.equals("Similar")) {
-                movieStatus = "S";
-                if (mMovieId != null) {
+
+                if (!mMovieId.equals("0") ) {
+                    movieStatus = "S";
+
                     getSimilarMovieData(this.getResources().getString(R.string.similar));
                     Log.d(LOG_TAG, "Movie ID on Fetch . " + mMovieId);
                 }
             }
             else if (movieSelection.equals("Detail"))
             {
-                if (mMovieId != null) {
+                if (!mMovieId.equals("0") ) {
+
 
                     getMovieReviewData();
                     getMovieTrailerData();
@@ -124,15 +141,13 @@ public String movieSelection;
             }
             sendStickyBroadcast(
                     new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
-            Log.d(LOG_TAG, "Movie Selection. " +movieSelection);
+            Log.d(LOG_TAG, "Movie Selection. " + movieSelection);
         }
-
-
 
 
     }
 
-    public void getSimilarMovieData(String movieSelectiontype)
+        public void getSimilarMovieData(String movieSelectiontype)
     {
 
           //final String API_BASE_URL = "http://api.themoviedb.org/3/movie/"+mMovieId+"/similar/";
