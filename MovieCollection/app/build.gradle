@@ -4,9 +4,9 @@ android {
     signingConfigs {
         config {
             keyAlias 'movieproject'
-            keyPassword 'password'
-            storeFile file('C:/Users/Kamini/Capstone/keystore.jks')
-            storePassword 'password'
+            keyPassword 'bhandari2'
+            storeFile file('keystore.jks')
+            storePassword 'bhandari2'
         }
     }
     compileSdkVersion 23
